@@ -82,6 +82,7 @@ namespace PlayerController
             HandleJump();
             HandleDirection();
             HandleGravity();
+            HandleSkill();
             HandleRoll();
             Attack();
             ApplyMovement();
@@ -97,8 +98,6 @@ namespace PlayerController
                 Vector2 hitPoint = localPos + new Vector2(1.15f, 0f) * (sr.flipX ? -1 : 1);
                 LayerMask layerMask  = LayerMask.GetMask("Unit");
                 Collider2D[] monsters = Physics2D.OverlapCapsuleAll(hitPoint,new Vector2(0.99f,0.68f),CapsuleDirection2D.Horizontal,180f, layerMask);
-
-                Debug.DrawLine(hitPoint - new Vector2(0.5f,0), hitPoint + new Vector2(0.5f, 0));
                 _anim.SetTrigger("attackTrig");
                 if (monsters.Length == 0) return;
                 for (int i=0;i<monsters.Length; i++)
@@ -108,7 +107,7 @@ namespace PlayerController
                     monsters[i].GetComponent<Unit>().OnHit(hitPoint, 10);
                 }
                 isAttack = true;
-                Invoke("AttackHide", 0.4f);
+                Invoke("AttackHide", 0.2f);
             }
         }
         public void AttackHide()
@@ -196,6 +195,36 @@ namespace PlayerController
 
         #endregion
 
+        public ParticleSystem _skillPS = null;
+        #region Skill
+        public void HandleSkill()
+        {
+            if (_frameInput.SkillDown)
+            {
+                Vector2 localPos = transform.position;
+                Vector2 hitPoint = localPos + new Vector2(1.15f, 0f) * (sr.flipX ? -1 : 1);
+                LayerMask layerMask = LayerMask.GetMask("Unit");
+                Collider2D[] monsters = Physics2D.OverlapCapsuleAll(hitPoint, new Vector2(0.99f, 0.68f), CapsuleDirection2D.Horizontal, 180f, layerMask);
+                _anim.SetTrigger("attackTrig");
+                if (monsters.Length == 0) return;
+                for (int i = 0; i < monsters.Length; i++)
+                {
+                    if (monsters[i] == _col) continue;
+                    if (!monsters[i].GetComponent<Unit>().isAlive) continue;
+                    monsters[i].GetComponent<Unit>().OnHit(hitPoint, 30);
+                    _skillPS.transform.position = monsters[i].transform.position;
+                    _skillPS.transform.position -= new Vector3(0, 0.96f);
+                    _skillPS.Play();
+                }
+
+            }
+        }
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine((Vector2)transform.position + new Vector2(1.15f, 0.34f), (Vector2)transform.position + new Vector2(2.15f,-0.34f));
+        }
+        #endregion
         #region Jumping
 
         private bool _jumpToConsume = false;

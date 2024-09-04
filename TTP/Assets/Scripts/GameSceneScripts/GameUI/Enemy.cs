@@ -25,7 +25,9 @@ public class Enemy : Unit
     {
         Stop = 0,
         Follow = 1,
-        Death = 2,
+        Attack = 2,
+        Hit = 3,
+        Death = 4,
     }
 
     private void Awake()
@@ -41,7 +43,6 @@ public class Enemy : Unit
     }
     private void HandleMove()
     {
-
         if (curEnemyState == EnemyState.Stop)
         {
             if (Vector2.Distance(transform.position, player.position) <= dist)
@@ -51,9 +52,14 @@ public class Enemy : Unit
             }
             //Move();
         }
-        else
+        else if(curEnemyState == EnemyState.Follow)
         {
-             _frameVelocity.x = ((transform.position.x - player.position.x < 0f) ? 1f : -1f) * speed;
+            float notTooClose = 1f;
+            if (Vector2.Distance(transform.position, player.position) < 1.5f)
+            {
+                notTooClose =  0.1f;
+            }
+            _frameVelocity.x = ((transform.position.x - player.position.x < 0f) ? 1f : -1f) * speed * notTooClose;
             _sr.flipX = ((transform.position.x - player.position.x < 0f));
 
             if (Mathf.Abs(transform.position.x - player.position.x) <= 1.5f)
@@ -154,6 +160,8 @@ public class Enemy : Unit
     {
         GetComponentInChildren<Animator>().SetTrigger("deathtrig");
         GameMgr.Inst.gameScene.gameUI.EnemyKilled(this);
+        curEnemyState = EnemyState.Death;
+        _frameVelocity = Vector2.zero;
         Destroy(gameObject, 1.2f);
     }
     private void OnCollisionEnter2D(Collision2D collision)
