@@ -57,7 +57,28 @@ public class UnitHealthDlg : MonoBehaviour
         }
         ShowText(value, maxValue);
     }
+    public void Init(int kvalue, int kmaxvalue)
+    {
+        maxValue = kmaxvalue;
+        value = kvalue;
+        if (curType == HpShowType.WithBar)
+        {
+            sld_Main.fillRect.gameObject.SetActive(true);
+            sld_Sub.fillRect.gameObject.SetActive(true);
+            m_backGround.SetActive(true);
+            sld_Main.fillRect.GetComponent<Image>().color = Color.Lerp(lowColor, highColor, GetSldValue());
+            if (sld_Main != null) sld_Main.value = GetSldValue();
+            if (sld_Sub != null) sld_Sub.value = GetSldValue();
+        }
+        else
+        {
+            sld_Main.fillRect.gameObject.SetActive(false);
+            sld_Sub.fillRect.gameObject.SetActive(false);
+            m_backGround.SetActive(false);
 
+        }
+        ShowText(value, maxValue);
+    }
     public void ShowText(int value, int mvalue)
     {
         if(curType == HpShowType.WithBar)
