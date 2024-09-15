@@ -17,7 +17,7 @@ public class GameScene : MonoBehaviour
     }
     void Start()
     {
-        
+        Debug.Log(123);
     }
 
     // Update is called once per frame
