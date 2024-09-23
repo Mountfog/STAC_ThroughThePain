@@ -14,6 +14,6 @@ public class TitleDlg : MonoBehaviour
     
     void OnClicked_Start()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneMgr.Instance.LoadScene("GameScene");
     }
 }
