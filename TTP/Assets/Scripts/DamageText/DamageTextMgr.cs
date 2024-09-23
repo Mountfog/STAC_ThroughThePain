@@ -12,7 +12,7 @@ public class DamageTextMgr : MonoBehaviour
     public Vector3 offset = Vector3.zero;
     
     private void Awake()
-    {
+    {   
         GameMgr.Inst.damageTextMgr = this;
     }
     

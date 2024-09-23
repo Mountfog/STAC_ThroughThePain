@@ -15,14 +15,4 @@ public class GameScene : MonoBehaviour
         GameMgr.Inst.Initialize();
         AssetMgr.Inst.Initialize();
     }
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

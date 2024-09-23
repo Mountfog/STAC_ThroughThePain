@@ -65,7 +65,7 @@ public class UnitHealthDlg : MonoBehaviour
         {
             sld_Main.fillRect.gameObject.SetActive(true);
             sld_Sub.fillRect.gameObject.SetActive(true);
-            m_backGround.SetActive(true);
+            if(m_backGround!=null) m_backGround.SetActive(true);
             sld_Main.fillRect.GetComponent<Image>().color = Color.Lerp(lowColor, highColor, GetSldValue());
             if (sld_Main != null) sld_Main.value = GetSldValue();
             if (sld_Sub != null) sld_Sub.value = GetSldValue();

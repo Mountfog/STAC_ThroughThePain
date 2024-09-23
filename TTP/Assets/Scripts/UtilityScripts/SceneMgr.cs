@@ -1,22 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using DG.Tweening;
 
 public class SceneMgr : MonoBehaviour
 {
     public static SceneMgr Instance;
     [SerializeField] private GameObject loaderCanvas;
     //[SerializeField] private Image progressBar;
+    [SerializeField] CanvasGroup m_CG;
     [SerializeField] private Image loadingPanel;
     [SerializeField] private Image loadingImage;
     private float target = 0;
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
@@ -28,16 +27,18 @@ public class SceneMgr : MonoBehaviour
         loaderCanvas.GetComponent<Canvas>().worldCamera = Camera.main;
         loadingPanel.GetComponent<Image>().DOFade(0f, 1f).SetEase(Ease.InQuint).From(1f);
         loadingImage.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+        m_CG.blocksRaycasts = false;
     }
     public async void LoadScene(string sceneName)
     {
+        m_CG.blocksRaycasts = true;
         target = 0;
         //progressBar.fillAmount = 0;
         var scene = SceneManager.LoadSceneAsync(sceneName);
         scene.allowSceneActivation = false;
 
-        loadingPanel.DOFade(1f, 0.5f).From(0f,true);
-        loadingImage.DOFade(1f, 0.5f).From(0f,true);
+        loadingPanel.DOFade(1f, 0.5f).From(0f, true);
+        loadingImage.DOFade(1f, 0.5f).From(0f, true);
         do
         {
             await Task.Delay(1000);
@@ -49,6 +50,7 @@ public class SceneMgr : MonoBehaviour
         await Task.Delay(2000);
         scene.allowSceneActivation = true;
         loadingPanel.DOFade(0f, 1f).From(1f, true);
+        m_CG.blocksRaycasts = false;
         //loaderCanvas.SetActive(false);
     }
     public void FadePanel()
