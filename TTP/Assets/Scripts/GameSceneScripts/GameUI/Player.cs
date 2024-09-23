@@ -21,7 +21,11 @@ public class Player : Unit
     }
     public override void OnDeath()
     {
+<<<<<<< Updated upstream
         AudioMgr.Instance.LoadClip_SFX("die");
+=======
+        AudioMgr.Instance.LoadClip_SFX("game-die");
+>>>>>>> Stashed changes
         throw new System.NotImplementedException();
     }
     public override void Initialize(int khp, int kspeed, int atk)
