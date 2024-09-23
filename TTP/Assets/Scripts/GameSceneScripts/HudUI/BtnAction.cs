@@ -1,30 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class BtnAction : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    public Image m_image = null;
-    public Image m_icon = null;
+    public Image[] img_Elements = null;
     public delegate void onBtnPress();
     public onBtnPress OnBtnPress;
-    private void Awake()
-    {
-        
-    }
+    public ButtonUI btnUI = null;
+
     public void OnPointerDown(PointerEventData data)
     {
-        m_image.rectTransform.anchoredPosition -= new Vector2(0, 3);
-        m_icon.rectTransform.anchoredPosition -= new Vector2(0, 3);
+        foreach (Image item in img_Elements)
+            item.rectTransform.anchoredPosition -= new Vector2(0, 3);
     }
     public void OnPointerUp(PointerEventData data)
     {
-        m_image.rectTransform.anchoredPosition += new Vector2(0, 3);
-        m_icon.rectTransform.anchoredPosition += new Vector2(0, 3);
-        if(OnBtnPress != null)
+        foreach (Image item in img_Elements)
+            item.rectTransform.anchoredPosition += new Vector2(0, 3);
+
+        if (OnBtnPress != null)
             OnBtnPress();
+
+        btnUI?.OnPressed();  
     }
     public void AddLinster(onBtnPress press)
     {
@@ -34,4 +32,5 @@ public class BtnAction : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         OnBtnPress = null;
     }
+
 }
