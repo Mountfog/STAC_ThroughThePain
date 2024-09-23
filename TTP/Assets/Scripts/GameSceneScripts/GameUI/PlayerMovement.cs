@@ -255,6 +255,7 @@ namespace PlayerController
             _frameVelocity.y = _stats.JumpPower;
             Jumped?.Invoke();
             _anim.SetTrigger("jumptrig");
+            AudioMgr.Instance.LoadClip_SFX("jump");
         }
 
         #endregion
