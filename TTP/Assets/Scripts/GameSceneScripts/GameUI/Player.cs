@@ -16,10 +16,12 @@ public class Player : Unit
     }
     public override void OnHit(Vector2 hitPoint, int damage)
     {
+        AudioMgr.Instance.LoadClip_SFX("hit");
         throw new System.NotImplementedException();
     }
     public override void OnDeath()
     {
+        AudioMgr.Instance.LoadClip_SFX("die");
         throw new System.NotImplementedException();
     }
     public override void Initialize(int khp, int kspeed, int atk)

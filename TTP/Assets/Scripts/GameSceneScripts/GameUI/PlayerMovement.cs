@@ -185,6 +185,7 @@ namespace PlayerController
                         _grounded = false;
                         _ignoringPlatform = true;
                         Physics2D.IgnoreCollision(groundRayCast.collider, _col);
+                        Debug.Log(groundRayCast.collider);
                     }
             }
             _anim.SetBool("isfalling", (!_grounded && !groundHit && _rb.velocity.y < 0)); //LeftTheGroundByPlatformEdge
@@ -255,6 +256,7 @@ namespace PlayerController
             _frameVelocity.y = _stats.JumpPower;
             Jumped?.Invoke();
             _anim.SetTrigger("jumptrig");
+            AudioMgr.Instance.LoadClip_SFX("jump");
         }
 
         #endregion

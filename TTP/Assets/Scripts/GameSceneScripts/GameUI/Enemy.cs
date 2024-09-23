@@ -76,8 +76,8 @@ public class Enemy : Unit
                 {
                     if (currentOneWayPlatform == null) return;
                     Debug.Log("GetLow");
-                    TilemapCollider2D tc = currentOneWayPlatform.GetComponent<TilemapCollider2D>();
-                    Physics2D.IgnoreCollision(_col, tc);
+                    CompositeCollider2D tc = currentOneWayPlatform.GetComponent<CompositeCollider2D>();
+                    Physics2D.IgnoreCollision(tc, _col);
                     _grounded = false;
 
                 }
