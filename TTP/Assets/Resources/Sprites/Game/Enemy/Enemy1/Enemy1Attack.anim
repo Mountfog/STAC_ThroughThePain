@@ -33,7 +33,7 @@ AnimationClip:
     - time: 0.41666666
       value: {fileID: -282509276, guid: 87682de5b953f3147903c0d985efed59, type: 3}
     attribute: m_Sprite
-    path: 
+    path: Monster (1)
     classID: 212
     script: {fileID: 0}
     flags: 2
@@ -45,7 +45,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 0
+      path: 826706042
       attribute: 0
       script: {fileID: 0}
       typeID: 212
@@ -84,4 +84,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.41666666
+    functionName: AttackEnd
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

@@ -44,7 +44,7 @@ Material:
     - _CycleTime: 3
     - _FlashSpeed: 3.25
     - _Rotate: 2.45
-    - _Value: 0.31383312
+    - _Value: 0.50093347
     - _WaveSpeed: 6
     m_Colors:
     - _Color: {r: 1.3041188, g: 1.3041188, b: 1.3041188, a: 1}

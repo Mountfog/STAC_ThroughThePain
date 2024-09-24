@@ -61,7 +61,7 @@ public class Enemy : Unit
             float notAnymore = 2f;
             if (Vector2.Distance(transform.position, player.position) < notAnymore)
             {
-                notTooClose =  0.1f;
+                notTooClose =  0f;
             }
             _frameVelocity.x = ((transform.position.x - player.position.x < 0f) ? 1f : -1f) * speed * notTooClose;
             _sr.flipX = ((transform.position.x - player.position.x < 0f));
@@ -71,10 +71,14 @@ public class Enemy : Unit
                 if (!_grounded) return;
                 float jumpFallValue = 1f;
                 float heightDiff = (transform.position.y - player.position.y);
-                if (Mathf.Abs(heightDiff) < jumpFallValue) return;
-                if (heightDiff <= jumpFallValue)
+                if (Mathf.Abs(heightDiff) < jumpFallValue)
                 {
-                    _frameVelocity.y = 24f;
+                    m_animator.SetTrigger("attacktrig");
+                    curEnemyState = EnemyState.Attack;
+                }
+                else if (heightDiff <= jumpFallValue)
+                {
+                    _frameVelocity.y = 22f;
                     _grounded = false;
                 }
                 else if (heightDiff > jumpFallValue)
@@ -88,6 +92,14 @@ public class Enemy : Unit
                 }
             }
         }
+        else if(curEnemyState == EnemyState.Attack)
+        {
+            
+        }
+    }
+    public void AttackEnd()
+    {
+        curEnemyState = EnemyState.Follow;
     }
     private void ApplyMovement() => _rigidBody.velocity = _frameVelocity;
     private void HandleGravity()
@@ -186,9 +198,12 @@ public class Enemy : Unit
         }
         else
         {
-            CompositeCollider2D tc = currentOneWayPlatform.GetComponent<CompositeCollider2D>();
-            Physics2D.IgnoreCollision(tc, _col,false);
-            currentOneWayPlatform = null;
+            if(currentOneWayPlatform != null)
+            {
+                CompositeCollider2D tc = currentOneWayPlatform.GetComponent<CompositeCollider2D>();
+                Physics2D.IgnoreCollision(tc, _col, false);
+                currentOneWayPlatform = null;
+            }
         }
     }
     //private void OnCollisionExit2D(Collision2D collision)
