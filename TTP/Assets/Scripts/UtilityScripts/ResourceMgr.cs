@@ -14,12 +14,11 @@ public class ResourceMgr : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
         m_BlurVolume.profile.TryGet(out m_Blur);
     }
     public void Blur(float value, float time)
     {
         m_BlurTween.Kill();
-        m_BlurTween = DOTween.To(() => m_Blur.focalLength.value, x => m_Blur.focalLength.value = x, value, time);
+        m_BlurTween = DOTween.To(() => m_Blur.focalLength.value, x => m_Blur.focalLength.value = x, value, time).SetUpdate(true).SetEase(Ease.Linear);
     }
 }

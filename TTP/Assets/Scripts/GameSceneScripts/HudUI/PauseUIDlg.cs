@@ -1,11 +1,80 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.UI;
 
 public class PauseUIDlg : MonoBehaviour
 {
-    private void OnEnable()
+    public bool m_isPaused = false;
+    public bool m_isOption = false;
+    public GameObject m_PauseBG;
+    public GameObject m_Pause;
+    public GameObject m_btnGroupBG;
+    public GameObject m_OptionBG;
+    public Button m_btnOption;
+    public Button m_btnRestart;
+    public Button m_btnContinue;
+    public Button m_btnExit;
+    Tweener m_twAppear;
+
+
+    [Header("Option")]
+    public OptionToggle tglVib;
+    public Button m_btnConfirm;
+    private void Start()
     {
-        ResourceMgr.Instance.Blur(30,0.5f);
+        m_btnOption.onClick.AddListener(OnClicked_Option);
+        m_btnRestart.onClick.AddListener(OnClicked_Restart);
+        m_btnContinue.onClick.AddListener(OnClicked_Continue);
+        m_btnExit.onClick.AddListener(OnClicked_Exit);
+
+        m_btnConfirm.onClick.AddListener(OnClicked_Confirm);
+    }
+    void OnClicked_Option()
+    {
+        SetOption(true);
+    }
+    void OnClicked_Continue()
+    {
+        SetPause(false);
+    }
+    void OnClicked_Restart()
+    {
+        SceneMgr.Instance.LoadScene("GameScene");
+    }
+    void OnClicked_Exit()
+    {
+        SceneMgr.Instance.LoadScene("TitleScene");
+    }
+    public void SetPause(bool bValue)
+    {
+        m_isPaused = bValue;
+        SetOption(false);
+        m_PauseBG.SetActive(bValue);
+        if (m_isPaused)
+        {
+            Time.timeScale = 0;
+            ResourceMgr.Instance.Blur(30, 0.5f);
+            m_twAppear.Kill();
+            m_twAppear = m_Pause.transform.DOLocalMoveY(0, 0.6f).From(-320).SetEase(Ease.OutBounce).SetUpdate(true);
+        }
+        else
+        {
+            Time.timeScale = 1;
+            ResourceMgr.Instance.Blur(1, 0);
+            m_twAppear.Kill();
+        }
+    }
+    public void SetOption(bool bValue)
+    {
+        m_isOption = bValue;
+        m_btnGroupBG.SetActive(!bValue);
+        m_OptionBG.SetActive(bValue);
+    }
+    public void OnClicked_Confirm()
+    {
+        SetOption(false);
     }
 }
