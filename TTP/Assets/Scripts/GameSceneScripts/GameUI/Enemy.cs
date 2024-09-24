@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,7 +58,8 @@ public class Enemy : Unit
         {
             float notTooClose = 1f;
             float attackDist = 3f;
-            if (Vector2.Distance(transform.position, player.position) < attackDist)
+            float notAnymore = 2f;
+            if (Vector2.Distance(transform.position, player.position) < notAnymore)
             {
                 notTooClose =  0.1f;
             }
@@ -67,12 +69,15 @@ public class Enemy : Unit
             if (Mathf.Abs(transform.position.x - player.position.x) <= attackDist)
             {
                 if (!_grounded) return;
-                if (transform.position.y - player.position.y <= 0f)
+                float jumpFallValue = 1f;
+                float heightDiff = (transform.position.y - player.position.y);
+                if (Mathf.Abs(heightDiff) < jumpFallValue) return;
+                if (heightDiff <= jumpFallValue)
                 {
                     _frameVelocity.y = 24f;
                     _grounded = false;
                 }
-                else if (transform.position.y - player.position.y > 0f)
+                else if (heightDiff > jumpFallValue)
                 {
                     if (currentOneWayPlatform == null) return;
                     Debug.Log("GetLow");
@@ -114,26 +119,28 @@ public class Enemy : Unit
 
         bool groundHit = groundRayCast;
         bool ceilingHit = ceilingRayCast;
-        // Hit a Ceiling
-        //if (ceilingHit)
-        //{
-        //    if (ceilingRayCast.collider.CompareTag("OneWayPlatform")) 
-        //    {
-        //        _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
-        //        Debug.Log("what;");
-        //    }
-        //}
-        // Landed on the Ground
+        //Hit a Ceiling
+        if (ceilingHit)
+        {
+            if (ceilingRayCast.collider.CompareTag("OneWayPlatform"))
+            {
+                Physics2D.IgnoreCollision(ceilingRayCast.collider, _col, false);
+            }
+        }
+        //Landed on the Ground
         if (!_grounded && groundHit)
         {
-            if (Physics2D.GetIgnoreCollision(groundRayCast.collider, _col))
-            {
-            }
-            else
-            {
-                Physics2D.IgnoreCollision(groundRayCast.collider, _col, false);
-                _grounded = true;
-            }
+            Physics2D.IgnoreCollision(groundRayCast.collider, _col, false);
+            _grounded = true;
+            //if (Physics2D.GetIgnoreCollision(groundRayCast.collider, _col))
+            //{
+
+            //}
+            //else
+            //{
+            //    Physics2D.IgnoreCollision(groundRayCast.collider, _col, false);
+            //    _grounded = true;
+            //}
         }
         // Left the Ground
         else if (_grounded && !groundHit)
@@ -176,13 +183,19 @@ public class Enemy : Unit
         {
             currentOneWayPlatform = collision.gameObject;
         }
-    }
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("OneWayPlatform"))
+        else
         {
-            Debug.Log("No");
+            CompositeCollider2D tc = currentOneWayPlatform.GetComponent<CompositeCollider2D>();
+            Physics2D.IgnoreCollision(tc, _col,false);
             currentOneWayPlatform = null;
         }
     }
+    //private void OnCollisionExit2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("OneWayPlatform"))
+    //    {
+    //        Debug.Log("No");
+    //        currentOneWayPlatform = null;
+    //    }
+    //}
 }
