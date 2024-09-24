@@ -338,6 +338,11 @@ namespace PlayerController
         #endregion
 
         private void ApplyMovement() => _rb.velocity = _frameVelocity;
+
+        public void MoveSound()
+        {
+            AudioMgr.Instance.LoadClip_SFX("playerMove", 1f);
+        }
     }
 
     public struct FrameInput
