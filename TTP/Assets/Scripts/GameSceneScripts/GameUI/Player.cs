@@ -9,6 +9,10 @@ public class Player : Unit
     void Awake()
     {
         playerMoveMent = GetComponent<PlayerMovement>();
+        AudioMgr.Instance.LoadClip_BGM("gameBgm");
+    }
+    private void Start()
+    {
     }
     public void LoadStage()
     {
