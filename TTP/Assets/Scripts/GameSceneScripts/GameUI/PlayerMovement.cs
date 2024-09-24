@@ -97,7 +97,8 @@ namespace PlayerController
                 Vector2 localPos = transform.position;
                 Vector2 hitPoint = localPos + new Vector2(1.15f, 0f) * (sr.flipX ? -1 : 1);
                 LayerMask layerMask  = LayerMask.GetMask("Unit");
-                Collider2D[] monsters = Physics2D.OverlapCapsuleAll(hitPoint,new Vector2(0.99f,0.68f),CapsuleDirection2D.Horizontal,180f, layerMask);
+                Collider2D[] monsters = Physics2D.OverlapBoxAll(hitPoint,new Vector2(0.99f,0.68f), 0f, layerMask);
+                
                 _anim.SetTrigger("attackTrig");
                 AudioMgr.Instance.LoadClip_SFX("playerAttack");
                 if (monsters.Length == 0) return;
@@ -223,7 +224,15 @@ namespace PlayerController
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine((Vector2)transform.position + new Vector2(1.15f, 0.34f), (Vector2)transform.position + new Vector2(2.15f,-0.34f));
+            Vector2 me = (Vector2)transform.position;
+            float flip = (sr.flipX ? -1f : 1f);
+            Vector2 start = flip  * new Vector2(1.15f, 0.34f);
+            Vector2 size = flip * new Vector2(1f, -0.68f);
+            Gizmos.DrawLine(me + start, me + start + size);
+            Gizmos.DrawLine(me + start, me + start + new Vector2(0,size.y));
+            Gizmos.DrawLine(me + start, me + start + new Vector2(size.x,0));
+            Gizmos.DrawLine(me + start + new Vector2(size.x, 0), me + start + size);
+            Gizmos.DrawLine(me + start + new Vector2(0, size.y), me + start + size);
         }
         #endregion
         #region Jumping
@@ -325,14 +334,6 @@ namespace PlayerController
         #region UnityInputSystem
         public void OnJump(InputAction.CallbackContext context)
         {
-            if (context.duration < 0.2f)
-            {
-                Debug.Log("Short Jump");
-            }
-            else if(context.duration > 0.3f)
-            {
-
-            }
         }
         #endregion
 
