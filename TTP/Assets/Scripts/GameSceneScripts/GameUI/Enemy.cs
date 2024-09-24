@@ -167,7 +167,7 @@ public class Enemy : Unit
         base.OnHit(hitPoint, damage);
         GameMgr.Inst.damageTextMgr.CreateDamageText(damage, this.transform, hitPoint);
         Camera.main.transform.GetComponent<CameraShake>().ShakeCamera();
-
+        AudioMgr.Instance.LoadClip_SFX("enemyHit");
     }
     public override void OnDeath()
     {
@@ -175,6 +175,7 @@ public class Enemy : Unit
         GameMgr.Inst.gameScene.gameUI.EnemyKilled(this);
         curEnemyState = EnemyState.Death;
         _frameVelocity = Vector2.zero;
+        AudioMgr.Instance.LoadClip_SFX("enemyDie");
         Destroy(gameObject, 1.2f);
     }
     private void OnCollisionEnter2D(Collision2D collision)

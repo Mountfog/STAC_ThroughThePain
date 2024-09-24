@@ -99,6 +99,7 @@ namespace PlayerController
                 LayerMask layerMask  = LayerMask.GetMask("Unit");
                 Collider2D[] monsters = Physics2D.OverlapCapsuleAll(hitPoint,new Vector2(0.99f,0.68f),CapsuleDirection2D.Horizontal,180f, layerMask);
                 _anim.SetTrigger("attackTrig");
+                AudioMgr.Instance.LoadClip_SFX("playerAttack");
                 if (monsters.Length == 0) return;
                 for (int i=0;i<monsters.Length; i++)
                 {
@@ -255,7 +256,7 @@ namespace PlayerController
             _frameVelocity.y = _stats.JumpPower;
             Jumped?.Invoke();
             _anim.SetTrigger("jumptrig");
-            AudioMgr.Instance.LoadClip_SFX("jump");
+            AudioMgr.Instance.LoadClip_SFX("playerJump");
         }
 
         #endregion
@@ -280,6 +281,7 @@ namespace PlayerController
 
             }
             _anim.SetBool("ismove", _frameInput.Move.x != 0);
+            //AudioMgr.Instance.LoadClip_SFX("playerMove");
         }
 
         #endregion
@@ -294,6 +296,7 @@ namespace PlayerController
                 _frameVelocity.x = rollSpeed * (sr.flipX ? -1 : 1);
                 isRoll = true;
                 Invoke("RollHide", 0.26f);
+                AudioMgr.Instance.LoadClip_SFX("playerDash");
             }
         }
         public void RollHide()
