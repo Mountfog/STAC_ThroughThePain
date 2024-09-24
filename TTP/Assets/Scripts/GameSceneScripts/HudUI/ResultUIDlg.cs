@@ -88,7 +88,7 @@ public class ResultUIDlg : MonoBehaviour
 
 
 
-    #region UI Animation
+        #region UI Animation
 
     IEnumerator Enum_UIAnimate(float playTime, bool isClear)
     {

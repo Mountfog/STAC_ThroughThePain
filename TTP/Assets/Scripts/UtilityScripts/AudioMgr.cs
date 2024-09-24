@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioMgr : MonoBehaviour
 {
@@ -44,6 +45,12 @@ public class AudioMgr : MonoBehaviour
         if (!m_audioClips.Exists(a => a.name == name)) return;
         SoundClip c = m_audioClips.Find(a => a.name == name);
         sfxSource.PlayOneShot(c.clip);
+    }
+    public void LoadClip_SFX(string name, float volume)
+    {
+        if (!m_audioClips.Exists(a => a.name == name)) return;
+        SoundClip c = m_audioClips.Find(a => a.name == name);
+        sfxSource.PlayOneShot(c.clip, volume);
     }
     public void LoadClip_BGM(string name)
     {

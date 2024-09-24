@@ -21,15 +21,18 @@ public class Enemy : Unit
     [SerializeField] private bool _grounded = true;
     public LayerMask mask;
     [SerializeField] private GameObject currentOneWayPlatform;
-    public EnemyState curEnemyState = EnemyState.Stop; 
+    public EnemyState curEnemyState = EnemyState.Stop;
 
+    private float attackTime = 0f;
+    private bool isAttacked = false;
     public enum EnemyState
     {
         Stop = 0,
         Follow = 1,
         Attack = 2,
-        Hit = 3,
-        Death = 4,
+        AttackEnd = 3,
+        Hit = 4,
+        Death = 5,
     }
 
     private void Awake()
@@ -58,7 +61,7 @@ public class Enemy : Unit
         {
             float notTooClose = 1f;
             float attackDist = 3f;
-            float notAnymore = 2f;
+            float notAnymore = 3f;
             if (Vector2.Distance(transform.position, player.position) < notAnymore)
             {
                 notTooClose =  0f;
@@ -73,8 +76,10 @@ public class Enemy : Unit
                 float heightDiff = (transform.position.y - player.position.y);
                 if (Mathf.Abs(heightDiff) < jumpFallValue)
                 {
-                    m_animator.SetTrigger("attacktrig");
+                    m_animator.SetBool("isMove", false);
                     curEnemyState = EnemyState.Attack;
+                    attackTime = 0f;
+                    isAttacked = false;
                 }
                 else if (heightDiff <= jumpFallValue)
                 {
@@ -94,11 +99,24 @@ public class Enemy : Unit
         }
         else if(curEnemyState == EnemyState.Attack)
         {
-            
+            attackTime += Time.deltaTime;
+            if(attackTime >= 1f && !isAttacked)
+            {
+                isAttacked =true;
+                m_animator.SetTrigger("attacktrig");
+                _frameVelocity.x = (_sr.flipX ? 1f : -1f) * speed * 1.5f;
+            }
         }
     }
     public void AttackEnd()
     {
+        curEnemyState = EnemyState.AttackEnd;
+        _frameVelocity.x = 0f;
+        Invoke(nameof(BackToFollow), 0.3f);
+    }
+    public void BackToFollow()
+    {
+        m_animator.SetBool("isMove", true);
         curEnemyState = EnemyState.Follow;
     }
     private void ApplyMovement() => _rigidBody.velocity = _frameVelocity;

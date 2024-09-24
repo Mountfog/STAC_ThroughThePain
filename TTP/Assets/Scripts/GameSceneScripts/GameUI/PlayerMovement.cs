@@ -94,10 +94,11 @@ namespace PlayerController
             if(_frameInput.AttackDown && !isAttack && !isRoll)
             {
                 Debug.Log("Attack"); 
-                Vector2 localPos = transform.position;
-                Vector2 hitPoint = localPos + new Vector2(1.15f, 0f) * (sr.flipX ? -1 : 1);
+                Vector2 localPos = (Vector2)transform.position;
+                Vector2 hitPoint = localPos + new Vector2(1f, 0f) * (sr.flipX ? -1 : 1);
                 LayerMask layerMask  = LayerMask.GetMask("Unit");
-                Collider2D[] monsters = Physics2D.OverlapCapsuleAll(hitPoint,new Vector2(0.99f,0.68f),CapsuleDirection2D.Horizontal,180f, layerMask);
+                Collider2D[] monsters = Physics2D.OverlapBoxAll(hitPoint, new Vector2(1.5f, 0.8f), 0f, layerMask);
+                
                 _anim.SetTrigger("attackTrig");
                 AudioMgr.Instance.LoadClip_SFX("playerAttack");
                 if (monsters.Length == 0) return;
@@ -108,7 +109,6 @@ namespace PlayerController
                     monsters[i].GetComponent<Unit>().OnHit(hitPoint, 10);
                 }
                 isAttack = true;
-                Invoke("AttackHide", 0.2f);
             }
         }
         public void AttackHide()
@@ -223,7 +223,15 @@ namespace PlayerController
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine((Vector2)transform.position + new Vector2(1.15f, 0.34f), (Vector2)transform.position + new Vector2(2.15f,-0.34f));
+            Vector2 me = (Vector2)transform.position;
+            float flip = (sr.flipX ? -1f : 1f);
+            Vector2 start = flip  * (new Vector2(1f, 0f));
+            Vector2 size = flip * new Vector2(1.5f, 0.68f);
+            Vector2 startPos = me + start - (size / 2);
+            Gizmos.DrawLine(startPos, startPos + new Vector2(0,size.y));
+            Gizmos.DrawLine(startPos, startPos + new Vector2(size.x, 0));
+            Gizmos.DrawLine(startPos + new Vector2(size.x, 0), startPos + size);
+            Gizmos.DrawLine(startPos + new Vector2(0, size.y), startPos + size);
         }
         #endregion
         #region Jumping
@@ -295,7 +303,6 @@ namespace PlayerController
                 _anim.SetTrigger("rollTrig");
                 _frameVelocity.x = rollSpeed * (sr.flipX ? -1 : 1);
                 isRoll = true;
-                Invoke("RollHide", 0.26f);
                 AudioMgr.Instance.LoadClip_SFX("playerDash");
             }
         }
@@ -325,18 +332,15 @@ namespace PlayerController
         #region UnityInputSystem
         public void OnJump(InputAction.CallbackContext context)
         {
-            if (context.duration < 0.2f)
-            {
-                Debug.Log("Short Jump");
-            }
-            else if(context.duration > 0.3f)
-            {
-
-            }
         }
         #endregion
 
         private void ApplyMovement() => _rb.velocity = _frameVelocity;
+
+        public void MoveSound()
+        {
+            AudioMgr.Instance.LoadClip_SFX("playerMove", 1f);
+        }
     }
 
     public struct FrameInput
