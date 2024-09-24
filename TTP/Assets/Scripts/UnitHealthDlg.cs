@@ -134,7 +134,7 @@ public class UnitHealthDlg : MonoBehaviour
         }
     }
     
-    float GetSldValue() => (float)value / maxValue;
+    public float GetSldValue() => (float)value / maxValue;
 
     IEnumerator Enum_GetDamage()
     {

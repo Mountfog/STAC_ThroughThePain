@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,19 +17,37 @@ public class ButtonUI : MonoBehaviour
     public Image img_CoverIcon = null;
     public Image img_Icon = null;
     Material mat = null;
+    Collider2D coll = null;
 
-    [Space(10.0f)]
+    [Space(15.0f)]
 
     [Header("Info")]
     public ButtonType type = ButtonType.Attack;
+    [Space(10.0f)]
+    public bool isAble = true;
     public bool useCooltime = false;
-
     public float pressDelay = 0.0f;
+    public UnitHealthDlg skillEnergy = null;
 
-    private void Start()
+    bool ableSkill = false;
+    bool fullEnergy = false;
+
+    private void Update()
     {
-        img_CoverIcon.fillAmount = type == ButtonType.Skill ? 1 : 1;
-        if (useCooltime) mat = img_CoverIcon.material;
+        if (type == ButtonType.Skill)
+        {
+            img_CoverIcon.fillAmount = skillEnergy.GetSldValue();
+
+            if (skillEnergy.GetSldValue() == 1 && !fullEnergy)
+            {
+                fullEnergy = true;
+                ableSkill = true;
+
+                StartCoroutine(Enum_CoolEnd());
+            }
+
+            coll.enabled = ableSkill;
+        }
     }
 
     public void Init(ButtonType type, bool useCooltime, float coolTime)
@@ -36,21 +55,60 @@ public class ButtonUI : MonoBehaviour
         this.type = type;
         this.useCooltime = useCooltime;
         pressDelay = coolTime;
+
+        img_CoverIcon.fillAmount = 1f;
+        mat = img_CoverIcon.material;
+        coll = GetComponent<CircleCollider2D>();
+
+        if(type == ButtonType.Skill)
+        {
+            img_CoverIcon.fillAmount = skillEnergy.GetSldValue();
+            img_Icon.color = Color.clear;
+            coll.enabled = false;
+        }
     }
 
     public void OnPressed()
     {
-        StopAllCoroutines();
+        if(type == ButtonType.Skill && ableSkill)
+        {
+            skillEnergy.SetHp(-skillEnergy.maxValue);
+            ableSkill = false;
+            fullEnergy = false;
+        }
 
-        if (useCooltime) StartCoroutine(Enum_ButtonCooltime());
-        if(img_Icon != null) img_Icon.color = Color.clear;
+        StopAllCoroutines();
+        mat.SetFloat("_Value", 0);
+
+        if (useCooltime) StartCoroutine(Enum_CoolDown());
+        if (img_Icon != null) img_Icon.color = Color.clear;
+
     }
 
-
-
-    IEnumerator Enum_ButtonCooltime()
+    IEnumerator Enum_CoolDown()
     {
-        float lerpTime = pressDelay;
+        float coolTime = pressDelay;
+
+        coll.enabled = false;
+
+        StartCoroutine(Enum_ButtonCooltime(coolTime - 0.5f));
+        yield return new WaitForSeconds(coolTime - 0.5f);
+        StartCoroutine(Enum_CoolEndEffect());
+        yield return new WaitForSeconds(0.5f);
+
+        coll.enabled = true;
+    }
+    IEnumerator Enum_CoolEnd()
+    {
+        StartCoroutine(Enum_CoolEndEffect());
+        yield return new WaitForSeconds(0.5f);
+
+        coll.enabled = true;
+    }
+
+    IEnumerator Enum_ButtonCooltime(float time)
+    {
+        float lerpTime = time;
         float curTime = 0.0f;
 
         img_CoverIcon.fillAmount = 0;
@@ -64,10 +122,7 @@ public class ButtonUI : MonoBehaviour
 
             yield return null;
         }
-
-        StartCoroutine(Enum_CoolEndEffect());
-    }
-
+    } // 쿨타임 + 0.5초 = 진짜 쿨타임
     IEnumerator Enum_CoolEndEffect()
     {
         if (img_Icon != null) StartCoroutine(Enum_ShowIcon());
@@ -84,10 +139,8 @@ public class ButtonUI : MonoBehaviour
 
             yield return null;
         }
-
         mat.SetFloat("_Value", 0);
-    }
-
+    } // 0.8초 기준 0.55초 걸림
     IEnumerator Enum_ShowIcon()
     {
         yield return new WaitForSeconds(0.3f);
@@ -105,5 +158,5 @@ public class ButtonUI : MonoBehaviour
 
             yield return null;
         }
-    }
+    }  // 얘도 0.5초 걸림
 }
