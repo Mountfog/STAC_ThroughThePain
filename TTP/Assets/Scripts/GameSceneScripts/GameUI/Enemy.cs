@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,15 +21,18 @@ public class Enemy : Unit
     [SerializeField] private bool _grounded = true;
     public LayerMask mask;
     [SerializeField] private GameObject currentOneWayPlatform;
-    public EnemyState curEnemyState = EnemyState.Stop; 
+    public EnemyState curEnemyState = EnemyState.Stop;
 
+    private float attackTime = 0f;
+    private bool isAttacked = false;
     public enum EnemyState
     {
         Stop = 0,
         Follow = 1,
         Attack = 2,
-        Hit = 3,
-        Death = 4,
+        AttackEnd = 3,
+        Hit = 4,
+        Death = 5,
     }
 
     private void Awake()
@@ -57,9 +61,10 @@ public class Enemy : Unit
         {
             float notTooClose = 1f;
             float attackDist = 3f;
-            if (Vector2.Distance(transform.position, player.position) < attackDist)
+            float notAnymore = 3f;
+            if (Vector2.Distance(transform.position, player.position) < notAnymore)
             {
-                notTooClose =  0.1f;
+                notTooClose =  0f;
             }
             _frameVelocity.x = ((transform.position.x - player.position.x < 0f) ? 1f : -1f) * speed * notTooClose;
             _sr.flipX = ((transform.position.x - player.position.x < 0f));
@@ -67,12 +72,21 @@ public class Enemy : Unit
             if (Mathf.Abs(transform.position.x - player.position.x) <= attackDist)
             {
                 if (!_grounded) return;
-                if (transform.position.y - player.position.y <= 0f)
+                float jumpFallValue = 1f;
+                float heightDiff = (transform.position.y - player.position.y);
+                if (Mathf.Abs(heightDiff) < jumpFallValue)
                 {
-                    _frameVelocity.y = 24f;
+                    m_animator.SetBool("isMove", false);
+                    curEnemyState = EnemyState.Attack;
+                    attackTime = 0f;
+                    isAttacked = false;
+                }
+                else if (heightDiff <= jumpFallValue)
+                {
+                    _frameVelocity.y = 22f;
                     _grounded = false;
                 }
-                else if (transform.position.y - player.position.y > 0f)
+                else if (heightDiff > jumpFallValue)
                 {
                     if (currentOneWayPlatform == null) return;
                     Debug.Log("GetLow");
@@ -83,6 +97,27 @@ public class Enemy : Unit
                 }
             }
         }
+        else if(curEnemyState == EnemyState.Attack)
+        {
+            attackTime += Time.deltaTime;
+            if(attackTime >= 1f && !isAttacked)
+            {
+                isAttacked =true;
+                m_animator.SetTrigger("attacktrig");
+                _frameVelocity.x = (_sr.flipX ? 1f : -1f) * speed * 1.5f;
+            }
+        }
+    }
+    public void AttackEnd()
+    {
+        curEnemyState = EnemyState.AttackEnd;
+        _frameVelocity.x = 0f;
+        Invoke(nameof(BackToFollow), 0.3f);
+    }
+    public void BackToFollow()
+    {
+        m_animator.SetBool("isMove", true);
+        curEnemyState = EnemyState.Follow;
     }
     private void ApplyMovement() => _rigidBody.velocity = _frameVelocity;
     private void HandleGravity()
@@ -114,26 +149,28 @@ public class Enemy : Unit
 
         bool groundHit = groundRayCast;
         bool ceilingHit = ceilingRayCast;
-        // Hit a Ceiling
-        //if (ceilingHit)
-        //{
-        //    if (ceilingRayCast.collider.CompareTag("OneWayPlatform")) 
-        //    {
-        //        _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
-        //        Debug.Log("what;");
-        //    }
-        //}
-        // Landed on the Ground
+        //Hit a Ceiling
+        if (ceilingHit)
+        {
+            if (ceilingRayCast.collider.CompareTag("OneWayPlatform"))
+            {
+                Physics2D.IgnoreCollision(ceilingRayCast.collider, _col, false);
+            }
+        }
+        //Landed on the Ground
         if (!_grounded && groundHit)
         {
-            if (Physics2D.GetIgnoreCollision(groundRayCast.collider, _col))
-            {
-            }
-            else
-            {
-                Physics2D.IgnoreCollision(groundRayCast.collider, _col, false);
-                _grounded = true;
-            }
+            Physics2D.IgnoreCollision(groundRayCast.collider, _col, false);
+            _grounded = true;
+            //if (Physics2D.GetIgnoreCollision(groundRayCast.collider, _col))
+            //{
+
+            //}
+            //else
+            //{
+            //    Physics2D.IgnoreCollision(groundRayCast.collider, _col, false);
+            //    _grounded = true;
+            //}
         }
         // Left the Ground
         else if (_grounded && !groundHit)
@@ -160,7 +197,7 @@ public class Enemy : Unit
         base.OnHit(hitPoint, damage);
         GameMgr.Inst.damageTextMgr.CreateDamageText(damage, this.transform, hitPoint);
         Camera.main.transform.GetComponent<CameraShake>().ShakeCamera();
-
+        AudioMgr.Instance.LoadClip_SFX("enemyHit");
     }
     public override void OnDeath()
     {
@@ -168,6 +205,7 @@ public class Enemy : Unit
         GameMgr.Inst.gameScene.gameUI.EnemyKilled(this);
         curEnemyState = EnemyState.Death;
         _frameVelocity = Vector2.zero;
+        AudioMgr.Instance.LoadClip_SFX("enemyDie");
         Destroy(gameObject, 1.2f);
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -176,13 +214,22 @@ public class Enemy : Unit
         {
             currentOneWayPlatform = collision.gameObject;
         }
-    }
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("OneWayPlatform"))
+        else
         {
-            Debug.Log("No");
-            currentOneWayPlatform = null;
+            if(currentOneWayPlatform != null)
+            {
+                CompositeCollider2D tc = currentOneWayPlatform.GetComponent<CompositeCollider2D>();
+                Physics2D.IgnoreCollision(tc, _col, false);
+                currentOneWayPlatform = null;
+            }
         }
     }
+    //private void OnCollisionExit2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("OneWayPlatform"))
+    //    {
+    //        Debug.Log("No");
+    //        currentOneWayPlatform = null;
+    //    }
+    //}
 }
