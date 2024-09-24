@@ -1,5 +1,5 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class HudUI : MonoBehaviour
 {
@@ -26,7 +26,7 @@ public class HudUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-                pauseDlg.SetPause(false);
+        pauseDlg.SetPause(false);
         playerHealthDlg.Init(100, 100);
         playerPowerDlg.Init(0, 100);
 

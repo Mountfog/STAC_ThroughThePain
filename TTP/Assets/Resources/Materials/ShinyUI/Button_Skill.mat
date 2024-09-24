@@ -47,7 +47,7 @@ Material:
     - _Value: 0
     - _WaveSpeed: 6
     m_Colors:
-    - _Color: {r: 1.3041188, g: 1.3041188, b: 1.3041188, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &6454289560425256427
 MonoBehaviour:
