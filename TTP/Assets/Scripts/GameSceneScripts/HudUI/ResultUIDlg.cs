@@ -35,7 +35,6 @@ public class ResultUIDlg : MonoBehaviour
     public Camera cam = null;
     public Volume volume = null;
     DepthOfField dop = null;
-    PlayerInputActions _playerAction = null;
 
     bool panelActive = false;
 
@@ -51,9 +50,6 @@ public class ResultUIDlg : MonoBehaviour
 
     private void Start()
     {
-        _playerAction = new PlayerInputActions();
-        _playerAction.Game.Enable();
-
         panelImg.raycastTarget = false;
         uiElements.transform.localPosition = new Vector3(0, -400, 0);
 
@@ -72,17 +68,9 @@ public class ResultUIDlg : MonoBehaviour
         //transform.gameObject.SetActive(false);
     }
 
-    private void Update()
-    {
-        if (_playerAction.Game.Debug.IsPressed() && !panelActive)
-        {
-            Init(true, 135);
-            panelActive = true;
-        }
-    }
-
     public void Init(bool isClear, float playTime)
     {
+        panelActive = true;
         panelImg.raycastTarget = true;
 
         title_Clear.SetActive(isClear);

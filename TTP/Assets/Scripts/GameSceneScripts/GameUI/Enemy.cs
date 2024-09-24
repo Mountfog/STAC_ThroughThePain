@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
 
 public class Enemy : Unit
@@ -55,14 +56,15 @@ public class Enemy : Unit
         else if(curEnemyState == EnemyState.Follow)
         {
             float notTooClose = 1f;
-            if (Vector2.Distance(transform.position, player.position) < 1.5f)
+            float attackDist = 3f;
+            if (Vector2.Distance(transform.position, player.position) < attackDist)
             {
                 notTooClose =  0.1f;
             }
             _frameVelocity.x = ((transform.position.x - player.position.x < 0f) ? 1f : -1f) * speed * notTooClose;
             _sr.flipX = ((transform.position.x - player.position.x < 0f));
 
-            if (Mathf.Abs(transform.position.x - player.position.x) <= 1.5f)
+            if (Mathf.Abs(transform.position.x - player.position.x) <= attackDist)
             {
                 if (!_grounded) return;
                 if (transform.position.y - player.position.y <= 0f)
@@ -73,9 +75,10 @@ public class Enemy : Unit
                 else if (transform.position.y - player.position.y > 0f)
                 {
                     if (currentOneWayPlatform == null) return;
-                    TilemapCollider2D tc = currentOneWayPlatform.GetComponent<TilemapCollider2D>();
-                    Physics2D.IgnoreCollision(_col, tc);
-                    _grounded = true;
+                    Debug.Log("GetLow");
+                    CompositeCollider2D tc = currentOneWayPlatform.GetComponent<CompositeCollider2D>();
+                    Physics2D.IgnoreCollision(tc, _col);
+                    _grounded = false;
 
                 }
             }
@@ -112,11 +115,14 @@ public class Enemy : Unit
         bool groundHit = groundRayCast;
         bool ceilingHit = ceilingRayCast;
         // Hit a Ceiling
-        if (ceilingHit)
-        {
-            if (ceilingRayCast.collider.CompareTag("OneWayPlatform"))
-                _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
-        }
+        //if (ceilingHit)
+        //{
+        //    if (ceilingRayCast.collider.CompareTag("OneWayPlatform")) 
+        //    {
+        //        _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
+        //        Debug.Log("what;");
+        //    }
+        //}
         // Landed on the Ground
         if (!_grounded && groundHit)
         {
@@ -175,6 +181,7 @@ public class Enemy : Unit
     {
         if (collision.gameObject.CompareTag("OneWayPlatform"))
         {
+            Debug.Log("No");
             currentOneWayPlatform = null;
         }
     }
