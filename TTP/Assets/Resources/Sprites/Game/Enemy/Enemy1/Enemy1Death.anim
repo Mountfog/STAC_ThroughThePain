@@ -43,7 +43,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Color.r
-    path: 
+    path: Monster (1)
     classID: 212
     script: {fileID: 0}
     flags: 0
@@ -73,7 +73,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Color.g
-    path: 
+    path: Monster (1)
     classID: 212
     script: {fileID: 0}
     flags: 0
@@ -103,7 +103,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Color.b
-    path: 
+    path: Monster (1)
     classID: 212
     script: {fileID: 0}
     flags: 0
@@ -142,7 +142,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Color.a
-    path: 
+    path: Monster (1)
     classID: 212
     script: {fileID: 0}
     flags: 0
@@ -166,7 +166,7 @@ AnimationClip:
     - time: 1.0833334
       value: {fileID: -997230314, guid: 87682de5b953f3147903c0d985efed59, type: 3}
     attribute: m_Sprite
-    path: 
+    path: Monster (1)
     classID: 212
     script: {fileID: 0}
     flags: 2
@@ -178,7 +178,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 0
+      path: 826706042
       attribute: 304273561
       script: {fileID: 0}
       typeID: 212
@@ -187,7 +187,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 0
+      path: 826706042
       attribute: 0
       script: {fileID: 0}
       typeID: 212
@@ -196,7 +196,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 0
+      path: 826706042
       attribute: 2526845255
       script: {fileID: 0}
       typeID: 212
@@ -205,7 +205,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 0
+      path: 826706042
       attribute: 4215373228
       script: {fileID: 0}
       typeID: 212
@@ -214,7 +214,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 0
+      path: 826706042
       attribute: 2334886179
       script: {fileID: 0}
       typeID: 212
@@ -278,7 +278,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Color.r
-    path: 
+    path: Monster (1)
     classID: 212
     script: {fileID: 0}
     flags: 0
@@ -308,7 +308,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Color.g
-    path: 
+    path: Monster (1)
     classID: 212
     script: {fileID: 0}
     flags: 0
@@ -338,7 +338,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Color.b
-    path: 
+    path: Monster (1)
     classID: 212
     script: {fileID: 0}
     flags: 0
@@ -377,7 +377,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Color.a
-    path: 
+    path: Monster (1)
     classID: 212
     script: {fileID: 0}
     flags: 0
