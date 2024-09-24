@@ -17,6 +17,7 @@ public class HudUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerHealthDlg.Init(100, 100);
         playerPowerDlg.Init(0, 100);
 
         btn_Attack.Init(ButtonType.Attack, true, 0.75f);
