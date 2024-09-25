@@ -38,6 +38,7 @@ namespace PlayerController
             _playerActions = new PlayerInputActions();
             _playerActions.Game.Enable();
             _playerActions.Game.Jump.performed += OnJump;
+            isAlive = true;
             //_pia.Game.Move.performed += OnMove
         }
 
@@ -77,6 +78,7 @@ namespace PlayerController
 
         private void FixedUpdate()
         {
+            if (!isAlive) return;
             CheckCollisions();
 
             HandleJump();
@@ -294,7 +296,7 @@ namespace PlayerController
 
         #endregion
         #region Roll
-        private bool isRoll = false;
+        public bool isRoll = false;
         public void HandleRoll()
         {
             if (_frameInput.RollDown && !isRoll && _grounded)
@@ -309,7 +311,6 @@ namespace PlayerController
         public void RollHide()
         {
             isRoll = false;
-            Debug.Log("RollHide");
         }
         #endregion
         #region Gravity
@@ -340,6 +341,16 @@ namespace PlayerController
         public void MoveSound()
         {
             AudioMgr.Instance.LoadClip_SFX("playerMove", 1f);
+        }
+        public void HitStop()
+        {
+            _frameVelocity.x = 0;
+        }
+        private bool isAlive = true;
+        public void OnDeath()
+        {
+            _frameVelocity.x = 0;
+            isAlive = false;
         }
     }
 

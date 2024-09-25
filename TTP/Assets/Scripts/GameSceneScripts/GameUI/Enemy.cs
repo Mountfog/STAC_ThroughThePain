@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
@@ -25,6 +26,8 @@ public class Enemy : Unit
 
     private float attackTime = 0f;
     private bool isAttacked = false;
+    private bool attackPerOnce = false;
+    private bool attackInCoolDown = false;
     public enum EnemyState
     {
         Stop = 0,
@@ -37,7 +40,7 @@ public class Enemy : Unit
 
     private void Awake()
     {
-        Initialize(30, 2, 3);
+        Initialize(50, 2, 3);
     }
     private void FixedUpdate()
     {
@@ -64,7 +67,7 @@ public class Enemy : Unit
             float notAnymore = 3f;
             if (Vector2.Distance(transform.position, player.position) < notAnymore)
             {
-                notTooClose =  0f;
+                notTooClose =  0.8f;
             }
             _frameVelocity.x = ((transform.position.x - player.position.x < 0f) ? 1f : -1f) * speed * notTooClose;
             _sr.flipX = ((transform.position.x - player.position.x < 0f));
@@ -76,10 +79,15 @@ public class Enemy : Unit
                 float heightDiff = (transform.position.y - player.position.y);
                 if (Mathf.Abs(heightDiff) < jumpFallValue)
                 {
+                    if (attackInCoolDown) return;
                     m_animator.SetBool("isMove", false);
                     curEnemyState = EnemyState.Attack;
                     attackTime = 0f;
                     isAttacked = false;
+                    attackPerOnce = false;
+                    attackInCoolDown = true;
+                    Invoke(nameof(AttackCool),1.5f);
+                    _frameVelocity.x = 0f;
                 }
                 else if (heightDiff <= jumpFallValue)
                 {
@@ -100,13 +108,47 @@ public class Enemy : Unit
         else if(curEnemyState == EnemyState.Attack)
         {
             attackTime += Time.deltaTime;
-            if(attackTime >= 1f && !isAttacked)
+            if(attackTime >= 0.6f && !isAttacked)
             {
                 isAttacked =true;
                 m_animator.SetTrigger("attacktrig");
                 _frameVelocity.x = (_sr.flipX ? 1f : -1f) * speed * 1.5f;
             }
+            else if (isAttacked && !attackPerOnce)
+            {
+                Vector2 localPos = (Vector2)transform.position;
+                Vector2 hitPoint = localPos + new Vector2(1.5f * (_sr.flipX ? 1f : -1f), -1f) ;
+                LayerMask layerMask = LayerMask.GetMask("Unit");
+                Collider2D[] player = Physics2D.OverlapBoxAll(hitPoint, new Vector2(1.6f, 1f), 0f, layerMask);
+                if (player.Length == 0) return;
+                for (int i = 0; i < player.Length; i++)
+                {
+                    if (player[i].CompareTag("Player"))
+                    {
+                        player[i].GetComponent<Unit>().OnHit(hitPoint, 10);
+                        attackPerOnce = true;
+                        break;
+                    }
+                }
+            }
         }
+    }
+    public void AttackCool()
+    {
+        attackInCoolDown = false;
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Vector2 me = (Vector2)transform.position;
+        float flip = (_sr.flipX ? 1f : -1f);
+        Vector2 start =  (new Vector2(flip* 1.5f, -1f));
+        Vector2 size = flip * new Vector2(1.6f, 1f);
+        Vector2 startPos = me + start - (size / 2);
+        Gizmos.DrawLine(startPos, startPos + new Vector2(0, size.y));
+        Gizmos.DrawLine(startPos, startPos + new Vector2(size.x, 0));
+        Gizmos.DrawLine(startPos + new Vector2(size.x, 0), startPos + size);
+        Gizmos.DrawLine(startPos + new Vector2(0, size.y), startPos + size);
     }
     public void AttackEnd()
     {
@@ -185,26 +227,27 @@ public class Enemy : Unit
     }
     public override void OnHit(Vector2 hitPoint, int damage)
     {
-        Debug.Log("Hit");
-        Vector2 pos = transform.position;
-        //³Ë¹é°ü·Ã
-        //Vector2 forceDirection = hitPoint - pos;
-        //Vector2 forceDirection = Vector2.up;
-        //forceDirection.Normalize();
-        //forceDirection *= forceMult;
-        //_rigidBody.AddForce(forceDirection, ForceMode2D.Impulse);
         GetComponentInChildren<Animator>().SetTrigger("hittrig");
         base.OnHit(hitPoint, damage);
         GameMgr.Inst.damageTextMgr.CreateDamageText(damage, this.transform, hitPoint);
         Camera.main.transform.GetComponent<CameraShake>().ShakeCamera();
         AudioMgr.Instance.LoadClip_SFX("enemyHit");
     }
+    public void HitStop()
+    {
+        m_animator.SetBool("isMove", true);
+        if (curEnemyState == EnemyState.Death) return;
+        curEnemyState = EnemyState.Follow;
+        attackInCoolDown = true;
+        Invoke(nameof(AttackCool), 0.5f);
+        _frameVelocity.x = 0f;
+    }
     public override void OnDeath()
     {
         GetComponentInChildren<Animator>().SetTrigger("deathtrig");
         GameMgr.Inst.gameScene.gameUI.EnemyKilled(this);
         curEnemyState = EnemyState.Death;
-        _frameVelocity = Vector2.zero;
+        _frameVelocity.x = 0;
         AudioMgr.Instance.LoadClip_SFX("enemyDie");
         Destroy(gameObject, 1.2f);
     }

@@ -30,15 +30,15 @@ public class HudUI : MonoBehaviour
         playerHealthDlg.Init(100, 100);
         playerPowerDlg.Init(0, 100);
 
-        btn_Attack.Init(ButtonType.Attack, true, 0.75f);
-        btn_Rolling.Init(ButtonType.Rolling, true, 1.25f);
+        btn_Attack.Init(ButtonType.Attack, true, 0.7f);
+        btn_Rolling.Init(ButtonType.Rolling, true, 0.7f);
         btn_Skill.Init(ButtonType.Skill, false, 0.0f);
 
         StartCoroutine(Enum_SkillTest());
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (_playerActions.Game.Pause.WasPerformedThisFrame())
         {

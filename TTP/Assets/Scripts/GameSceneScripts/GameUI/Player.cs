@@ -2,6 +2,7 @@ using PlayerController;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Enemy;
 
 public class Player : Unit
 {
@@ -20,16 +21,45 @@ public class Player : Unit
     }
     public override void OnHit(Vector2 hitPoint, int damage)
     {
-        AudioMgr.Instance.LoadClip_SFX("playerHit");
-        throw new System.NotImplementedException();
+        if (!playerMoveMent.isRoll)
+        {
+            curHealth -= damage;
+            unitHealthDlg.UpdateHealth(curHealth);
+            if (curHealth <= 0)
+            {
+                curHealth = 0;
+                OnDeath();
+            }
+            else
+            {
+                GetComponentInChildren<Animator>().SetTrigger("hittrig");
+                playerMoveMent.HitStop();
+            }
+            GameMgr.Inst.damageTextMgr.CreateDamageText(damage, this.transform, hitPoint);
+            Camera.main.transform.GetComponent<CameraShake>().ShakeCamera();
+            AudioMgr.Instance.LoadClip_SFX("playerHit");
+        }
+        else
+        {
+            GameMgr.Inst.damageTextMgr.CreateDodgeText("È¸ÇÇÇÔ",Color.red, this.transform, hitPoint);
+            AudioMgr.Instance.LoadClip_SFX("Jump");
+        }
     }
     public override void OnDeath()
     {
+        GetComponentInChildren<Animator>().SetTrigger("deathtrig");
+        playerMoveMent.OnDeath();
         AudioMgr.Instance.LoadClip_SFX("playerDie");
-        throw new System.NotImplementedException();
+        float gameTime = GameMgr.Inst.gameScene.gameTime;
+        GameMgr.Inst.gameScene.hudUI.resultDlg.Init(false, gameTime);
+        GetComponent<CapsuleCollider2D>().enabled = false;
     }
     public override void Initialize(int khp, int kspeed, int atk)
     {
-        throw new System.NotImplementedException();
+        unitHealthDlg.Init(khp);
+        maxHealth = khp;
+        curHealth = maxHealth;
+        moveSpeed = kspeed;
+        attack = khp;
     }
 }

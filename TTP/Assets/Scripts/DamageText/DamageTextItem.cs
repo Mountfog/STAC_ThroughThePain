@@ -20,7 +20,15 @@ public class DamageTextItem : MonoBehaviour
 
         StartCoroutine(Enum_TextEffect());
     }
+    public void Init(string ktext, Color kcolor, Vector3 pos, AnimationCurve _lerpAnim)
+    {
+        lerpAnim = _lerpAnim;
+        transform.localPosition = pos;
+        txt.text = ktext;
+        txt.color = kcolor;
 
+        StartCoroutine(Enum_TextEffect());
+    }
 
     IEnumerator Enum_TextEffect()
     {

@@ -2,7 +2,9 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PauseUIDlg : MonoBehaviour
@@ -25,27 +27,36 @@ public class PauseUIDlg : MonoBehaviour
     public Button m_btnConfirm;
     private void Start()
     {
-        m_btnOption.onClick.AddListener(OnClicked_Option);
-        m_btnRestart.onClick.AddListener(OnClicked_Restart);
-        m_btnContinue.onClick.AddListener(OnClicked_Continue);
-        m_btnExit.onClick.AddListener(OnClicked_Exit);
+        //m_btnOption.onClick.AddListener(OnClicked_Option);
+        //m_btnRestart.onClick.AddListener(OnClicked_Restart);
+        //m_btnContinue.onClick.AddListener(OnClicked_Continue);
+        //m_btnExit.onClick.AddListener(OnClicked_Exit);
 
-        m_btnConfirm.onClick.AddListener(OnClicked_Confirm);
+        //m_btnConfirm.onClick.AddListener(OnClicked_Confirm);
     }
-    void OnClicked_Option()
+    private void FixedUpdate()
+    {
+        if(Time.timeScale == 0)
+        {
+            InputSystem.Update();
+        }
+    }
+    public void OnClicked_Option()
     {
         SetOption(true);
     }
-    void OnClicked_Continue()
+    public void OnClicked_Continue()
     {
+        Debug.Log("Wahta");
         SetPause(false);
     }
-    void OnClicked_Restart()
+    public void OnClicked_Restart()
     {
         SceneMgr.Instance.LoadScene("GameScene");
     }
-    void OnClicked_Exit()
+    public void OnClicked_Exit()
     {
+        Debug.Log("Wahta");
         SceneMgr.Instance.LoadScene("TitleScene");
     }
     public void SetPause(bool bValue)
@@ -59,6 +70,7 @@ public class PauseUIDlg : MonoBehaviour
             ResourceMgr.Instance.Blur(30, 0.5f);
             m_twAppear.Kill();
             m_twAppear = m_Pause.transform.DOLocalMoveY(0, 0.6f).From(-320).SetEase(Ease.OutBounce).SetUpdate(true);
+            
         }
         else
         {

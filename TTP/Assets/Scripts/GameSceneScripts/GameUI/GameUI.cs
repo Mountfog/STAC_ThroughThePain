@@ -13,6 +13,7 @@ public class GameUI : MonoBehaviour
     void Start()
     {
         LoadStage();
+        player.Initialize(100, 0, 0);
     }
     public void LoadStage()
     {

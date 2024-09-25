@@ -82,7 +82,6 @@ public class ButtonUI : MonoBehaviour
 
         if (useCooltime) StartCoroutine(Enum_CoolDown());
         if (img_Icon != null) img_Icon.color = Color.clear;
-
     }
 
     IEnumerator Enum_CoolDown()
