@@ -62,4 +62,11 @@ public class Player : Unit
         moveSpeed = kspeed;
         attack = khp;
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Fall"))
+        {
+            OnDeath();
+        }
+    }
 }

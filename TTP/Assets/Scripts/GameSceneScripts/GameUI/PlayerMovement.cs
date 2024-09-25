@@ -352,6 +352,7 @@ namespace PlayerController
             _frameVelocity.x = 0;
             isAlive = false;
         }
+
     }
 
     public struct FrameInput

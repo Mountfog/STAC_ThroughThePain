@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - OneWayPlatform
+  - Fall
   layers:
   - Default
   - TransparentFX
