@@ -5,12 +5,15 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class PauseUIDlg : MonoBehaviour
 {
     public bool m_isPaused = false;
     public bool m_isOption = false;
+
+    [Header("Pause Elements")]
     public GameObject m_PauseBG;
     public GameObject m_Pause;
     public GameObject m_btnGroupBG;
@@ -21,18 +24,30 @@ public class PauseUIDlg : MonoBehaviour
     public Button m_btnExit;
     Tweener m_twAppear;
 
+    [Space(20.0f)]
 
     [Header("Option")]
+    public Slider sld_Sfx = null;
+    public Slider sld_Bgm = null;
     public OptionToggle tglVib;
     public Button m_btnConfirm;
+
+
+
     private void Start()
     {
-        //m_btnOption.onClick.AddListener(OnClicked_Option);
-        //m_btnRestart.onClick.AddListener(OnClicked_Restart);
-        //m_btnContinue.onClick.AddListener(OnClicked_Continue);
-        //m_btnExit.onClick.AddListener(OnClicked_Exit);
+        m_btnOption.onClick.AddListener(OnClicked_Option);
+        m_btnRestart.onClick.AddListener(OnClicked_Restart);
+        m_btnContinue.onClick.AddListener(OnClicked_Continue);
+        m_btnExit.onClick.AddListener(OnClicked_Exit);
 
-        //m_btnConfirm.onClick.AddListener(OnClicked_Confirm);
+        m_btnConfirm.onClick.AddListener(OnClicked_Confirm);
+
+        sld_Sfx.onValueChanged.AddListener(OnValueChanged_VolumeSlider);
+        sld_Bgm.onValueChanged.AddListener(OnValueChanged_VolumeSlider);
+
+        sld_Sfx.value = GameMgr.Inst.gInfo.sfxVolume;
+        sld_Bgm.value = GameMgr.Inst.gInfo.bgmVolume;
     }
     private void FixedUpdate()
     {
@@ -41,6 +56,7 @@ public class PauseUIDlg : MonoBehaviour
             InputSystem.Update();
         }
     }
+    
     public void OnClicked_Option()
     {
         SetOption(true);
@@ -59,6 +75,7 @@ public class PauseUIDlg : MonoBehaviour
         Debug.Log("Wahta");
         SceneMgr.Instance.LoadScene("TitleScene");
     }
+
     public void SetPause(bool bValue)
     {
         m_isPaused = bValue;
@@ -88,5 +105,14 @@ public class PauseUIDlg : MonoBehaviour
     public void OnClicked_Confirm()
     {
         SetOption(false);
+    }
+
+
+    void OnValueChanged_VolumeSlider(float value)
+    {
+        GameMgr.Inst.gInfo.sfxVolume = sld_Sfx.value;
+        GameMgr.Inst.gInfo.bgmVolume = sld_Bgm.value;
+
+        AudioMgr.Instance.SetBgmVolume(GameMgr.Inst.gInfo.bgmVolume);
     }
 }

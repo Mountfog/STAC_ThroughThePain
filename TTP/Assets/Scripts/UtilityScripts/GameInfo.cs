@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class GameInfo
 {
+    public float sfxVolume = 0.5f;
+    public float bgmVolume = 0.5f;
+
     private int coins = 0;
     public int Coins => coins;
     public List<PlayerUpgrade> upgrades = new List<PlayerUpgrade>();

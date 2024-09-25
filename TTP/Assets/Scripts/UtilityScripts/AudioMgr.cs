@@ -1,8 +1,5 @@
-using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class AudioMgr : MonoBehaviour
 {
@@ -28,11 +25,15 @@ public class AudioMgr : MonoBehaviour
         }
         LoadAudioClips();
     }
+
+
+    public void SetBgmVolume(float value) { bgmSource.volume = value; }
+
     private void LoadAudioClips()
     {
         m_audioClips.Clear();
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Sound");
-        foreach(AudioClip c in clips)
+        foreach (AudioClip c in clips)
         {
             SoundClip sc = new SoundClip();
             sc.clip = c;
@@ -44,7 +45,7 @@ public class AudioMgr : MonoBehaviour
     {
         if (!m_audioClips.Exists(a => a.name == name)) return;
         SoundClip c = m_audioClips.Find(a => a.name == name);
-        sfxSource.PlayOneShot(c.clip);
+        sfxSource.PlayOneShot(c.clip, GameMgr.Inst.gInfo.sfxVolume);
     }
     public void LoadClip_SFX(string name, float volume)
     {

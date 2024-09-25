@@ -23,7 +23,6 @@ public class HudUI : MonoBehaviour
         _playerActions.Game.Enable();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         pauseDlg.SetPause(false);
@@ -37,7 +36,6 @@ public class HudUI : MonoBehaviour
         StartCoroutine(Enum_SkillTest());
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (_playerActions.Game.Pause.WasPerformedThisFrame())
