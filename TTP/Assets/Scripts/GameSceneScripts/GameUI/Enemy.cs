@@ -16,8 +16,6 @@ public class Enemy : Unit
     public Vector2 pos1;
     public Vector2 pos2;
     public Transform player;
-    public float dist;
-    public float speed = 10f;
     private Vector2 _frameVelocity = Vector2.zero;
     [SerializeField] private bool _grounded = true;
     public LayerMask mask;
@@ -28,6 +26,20 @@ public class Enemy : Unit
     private bool isAttacked = false;
     private bool attackPerOnce = false;
     private bool attackInCoolDown = false;
+
+    [Header("Attack attributes")]
+    public float findDist;
+    public float speed = 10f;
+    public float attackDelay = 0.6f;
+    public float attackAfter = 0.5f;
+    public Vector2 offSet = Vector2.zero;
+    public Vector2 HitboxSize = Vector2.one;
+    public int enemyAttackValue = 10;
+    public float enemyAttackSpeed = 1.5f;
+    public float attackDist = 3f;
+    public float notAnymore = 3f;
+    public float notAnymoreScale = 0.8f;
+
     public enum EnemyState
     {
         Stop = 0,
@@ -53,7 +65,7 @@ public class Enemy : Unit
     {
         if (curEnemyState == EnemyState.Stop)
         {
-            if (Vector2.Distance(transform.position, player.position) <= dist)
+            if (Vector2.Distance(transform.position, player.position) <= findDist)
             {
                 curEnemyState = EnemyState.Follow;
                 m_animator.SetBool("isMove", true);
@@ -63,11 +75,9 @@ public class Enemy : Unit
         else if(curEnemyState == EnemyState.Follow)
         {
             float notTooClose = 1f;
-            float attackDist = 3f;
-            float notAnymore = 3f;
             if (Vector2.Distance(transform.position, player.position) < notAnymore)
             {
-                notTooClose =  0.8f;
+                notTooClose = notAnymoreScale;
             }
             _frameVelocity.x = ((transform.position.x - player.position.x < 0f) ? 1f : -1f) * speed * notTooClose;
             _sr.flipX = ((transform.position.x - player.position.x < 0f));
@@ -108,24 +118,24 @@ public class Enemy : Unit
         else if(curEnemyState == EnemyState.Attack)
         {
             attackTime += Time.deltaTime;
-            if(attackTime >= 0.6f && !isAttacked)
+            if(attackTime >= attackDelay && !isAttacked)
             {
                 isAttacked =true;
                 m_animator.SetTrigger("attacktrig");
-                _frameVelocity.x = (_sr.flipX ? 1f : -1f) * speed * 1.5f;
+                _frameVelocity.x = (_sr.flipX ? 1f : -1f) * speed * enemyAttackSpeed;
             }
             else if (isAttacked && !attackPerOnce)
             {
                 Vector2 localPos = (Vector2)transform.position;
-                Vector2 hitPoint = localPos + new Vector2(1.5f * (_sr.flipX ? 1f : -1f), -1f) ;
+                Vector2 hitPoint = localPos + new Vector2(offSet.x * (_sr.flipX ? 1f : -1f), offSet.y) ;
                 LayerMask layerMask = LayerMask.GetMask("Unit");
-                Collider2D[] player = Physics2D.OverlapBoxAll(hitPoint, new Vector2(1.6f, 1f), 0f, layerMask);
+                Collider2D[] player = Physics2D.OverlapBoxAll(hitPoint, HitboxSize, 0f, layerMask);
                 if (player.Length == 0) return;
                 for (int i = 0; i < player.Length; i++)
                 {
                     if (player[i].CompareTag("Player"))
                     {
-                        player[i].GetComponent<Unit>().OnHit(hitPoint, 10);
+                        player[i].GetComponent<Unit>().OnHit(hitPoint, enemyAttackValue);
                         attackPerOnce = true;
                         break;
                     }
@@ -142,8 +152,8 @@ public class Enemy : Unit
         Gizmos.color = Color.red;
         Vector2 me = (Vector2)transform.position;
         float flip = (_sr.flipX ? 1f : -1f);
-        Vector2 start =  (new Vector2(flip* 1.5f, -1f));
-        Vector2 size = flip * new Vector2(1.6f, 1f);
+        Vector2 start =  (new Vector2(offSet.x * flip, offSet.y));
+        Vector2 size = flip * HitboxSize;
         Vector2 startPos = me + start - (size / 2);
         Gizmos.DrawLine(startPos, startPos + new Vector2(0, size.y));
         Gizmos.DrawLine(startPos, startPos + new Vector2(size.x, 0));
@@ -154,7 +164,7 @@ public class Enemy : Unit
     {
         curEnemyState = EnemyState.AttackEnd;
         _frameVelocity.x = 0f;
-        Invoke(nameof(BackToFollow), 0.3f);
+        Invoke(nameof(BackToFollow), attackAfter);
     }
     public void BackToFollow()
     {

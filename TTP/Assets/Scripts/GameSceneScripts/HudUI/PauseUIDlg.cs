@@ -63,7 +63,6 @@ public class PauseUIDlg : MonoBehaviour
     }
     public void OnClicked_Continue()
     {
-        Debug.Log("Wahta");
         SetPause(false);
     }
     public void OnClicked_Restart()
@@ -72,7 +71,6 @@ public class PauseUIDlg : MonoBehaviour
     }
     public void OnClicked_Exit()
     {
-        Debug.Log("Wahta");
         SceneMgr.Instance.LoadScene("TitleScene");
     }
 
