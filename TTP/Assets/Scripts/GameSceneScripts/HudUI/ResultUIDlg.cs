@@ -79,6 +79,7 @@ public class ResultUIDlg : MonoBehaviour
         fx_Fail.gameObject.SetActive(!isClear);
 
         StartCoroutine(Enum_UIAnimate(playTime, isClear));
+        GameMgr.Inst.gameScene.hudUI.HideInGameUI();
     }
 
 

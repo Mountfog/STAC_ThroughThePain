@@ -42915,6 +42915,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseDlg: {fileID: 973375217}
   resultDlg: {fileID: 1459264652}
+  inGameUIAlpha: {fileID: 1605388377}
   playerHealthDlg: {fileID: 704861202}
   playerPowerDlg: {fileID: 2049098510}
   btn_Attack: {fileID: 1314061411}
