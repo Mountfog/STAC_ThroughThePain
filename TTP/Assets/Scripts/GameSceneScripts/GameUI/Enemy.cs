@@ -107,7 +107,6 @@ public class Enemy : Unit
                 else if (heightDiff > jumpFallValue)
                 {
                     if (currentOneWayPlatform == null) return;
-                    Debug.Log("GetLow");
                     CompositeCollider2D tc = currentOneWayPlatform.GetComponent<CompositeCollider2D>();
                     Physics2D.IgnoreCollision(tc, _col);
                     _grounded = false;
@@ -275,6 +274,13 @@ public class Enemy : Unit
                 Physics2D.IgnoreCollision(tc, _col, false);
                 currentOneWayPlatform = null;
             }
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Fall"))
+        {
+            OnDeath();
         }
     }
     //private void OnCollisionExit2D(Collision2D collision)

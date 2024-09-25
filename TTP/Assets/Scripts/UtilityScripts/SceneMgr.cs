@@ -34,11 +34,12 @@ public class SceneMgr : MonoBehaviour
         m_CG.blocksRaycasts = true;
         target = 0;
         //progressBar.fillAmount = 0;
+
+        loadingPanel.DOFade(1f, 0.5f).From(0f, true).SetUpdate(true);
+        loadingImage.DOFade(1f, 0.5f).From(0f, true).SetUpdate(true);
         var scene = SceneManager.LoadSceneAsync(sceneName);
         scene.allowSceneActivation = false;
 
-        loadingPanel.DOFade(1f, 0.5f).From(0f, true);
-        loadingImage.DOFade(1f, 0.5f).From(0f, true);
         do
         {
             await Task.Delay(1000);
@@ -46,10 +47,10 @@ public class SceneMgr : MonoBehaviour
         }
         while (scene.progress < 0.9f);
         await Task.Delay(1000);
-        loadingImage.DOFade(0f, 1f).From(1f, true);
-        await Task.Delay(2000);
+        loadingImage.DOFade(0f, 1f).From(1f, true).SetUpdate(true);
+        await Task.Delay(1000);
         scene.allowSceneActivation = true;
-        loadingPanel.DOFade(0f, 1f).From(1f, true);
+        loadingPanel.DOFade(0f, 1f).From(1f, true).SetUpdate(true);
         m_CG.blocksRaycasts = false;
         //loaderCanvas.SetActive(false);
     }
