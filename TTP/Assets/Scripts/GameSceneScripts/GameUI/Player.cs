@@ -41,8 +41,8 @@ public class Player : Unit
         }
         else
         {
-            GameMgr.Inst.damageTextMgr.CreateDodgeText("회피함",Color.red, this.transform, hitPoint);
-            GameMgr.Inst.gameScene.hudUI.playerPowerDlg.SetHp(10);
+            GameMgr.Inst.damageTextMgr.CreateDodgeText("회피함",Color.green, this.transform, hitPoint);
+            GameMgr.Inst.gameScene.hudUI.playerPowerDlg.SetHp(25);
             AudioMgr.Instance.LoadClip_SFX("Jump");
         }
     }
@@ -72,6 +72,7 @@ public class Player : Unit
     }
     public void SetResultState()
     {
+        playerMoveMent.SetResultState();
         //GetComponent<CapsuleCollider2D>().enabled = false;
     }
 }

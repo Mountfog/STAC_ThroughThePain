@@ -17,7 +17,16 @@ public class DamageTextItem : MonoBehaviour
         lerpAnim = _lerpAnim;
         transform.localPosition = pos;
         txt.text = damage.ToString();
+        if (damage > 50)
+        {
+            txt.text += "!!";
+        }
+        if (damage > 30)
+        {
+            txt.transform.parent.localScale += Vector3.one * 0.1f;
+        }
 
+        
         StartCoroutine(Enum_TextEffect());
     }
     public void Init(string ktext, Color kcolor, Vector3 pos, AnimationCurve _lerpAnim)

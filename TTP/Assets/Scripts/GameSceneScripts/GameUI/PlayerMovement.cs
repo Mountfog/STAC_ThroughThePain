@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using Unity.VisualScripting;
+using DG.Tweening;
+using Sequence = DG.Tweening.Sequence;
 
 namespace PlayerController
 {
@@ -79,15 +82,14 @@ namespace PlayerController
         private void FixedUpdate()
         {
             if (!isAlive) return;
-            if (GameMgr.Inst.gameScene.battleFSM.IsGameState()) return;
+            if (!GameMgr.Inst.gameScene.battleFSM.IsGameState()) return;
             CheckCollisions();
-
             HandleJump();
-            HandleDirection();
             HandleGravity();
             HandleSkill();
             HandleRoll();
             Attack();
+            HandleDirection();
             ApplyMovement();
 
         }
@@ -110,7 +112,7 @@ namespace PlayerController
                     if (monsters[i] == _col) continue;
                     if (!monsters[i].GetComponent<Unit>().isAlive) continue;
                     monsters[i].GetComponent<Unit>().OnHit(hitPoint, 10);
-                    GameMgr.Inst.gameScene.hudUI.playerPowerDlg.SetHp(10);
+                    GameMgr.Inst.gameScene.hudUI.playerPowerDlg.SetHp(20);
                 }
                 isAttack = true;
             }
@@ -204,38 +206,27 @@ namespace PlayerController
         #region Skill
         public void HandleSkill()
         {
-            if (_frameInput.SkillDown)
+            if (_frameInput.SkillDown && !isAttack && !isRoll)
             {
-                Vector2 localPos = transform.position;
-                Vector2 hitPoint = localPos + new Vector2(1.15f, 0f) * (sr.flipX ? -1 : 1);
+                isRoll = true;
+                Vector2 localPos = (Vector2)transform.position;
+                Vector2 hitPoint = localPos + new Vector2(1.5f * (sr.flipX ? -1 : 1), 1.5f) ;
                 LayerMask layerMask = LayerMask.GetMask("Unit");
-                Collider2D[] monsters = Physics2D.OverlapCapsuleAll(hitPoint, new Vector2(0.99f, 0.68f), CapsuleDirection2D.Horizontal, 180f, layerMask);
-                _anim.SetTrigger("attackTrig");
+                Collider2D[] monsters = Physics2D.OverlapBoxAll(hitPoint, new Vector2(2f, 4f), 0f, layerMask);
+                _frameVelocity.y = 35f;
+                _anim.SetTrigger("skilltrig");
                 if (monsters.Length == 0) return;
                 for (int i = 0; i < monsters.Length; i++)
                 {
                     if (monsters[i] == _col) continue;
                     if (!monsters[i].GetComponent<Unit>().isAlive) continue;
-                    monsters[i].GetComponent<Unit>().OnHit(hitPoint, 30);
+                    int damage = Vector2.Distance(monsters[i].transform.position, transform.position) < 0.3f ? 50 : 100;
+                    monsters[i].GetComponent<Unit>().OnHit(hitPoint, damage);
                     _skillPS.transform.position = monsters[i].transform.position;
                     _skillPS.transform.position -= new Vector3(0, 0.96f);
                     _skillPS.Play();
                 }
-
             }
-        }
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Vector2 me = (Vector2)transform.position;
-            float flip = (sr.flipX ? -1f : 1f);
-            Vector2 start = flip  * (new Vector2(1f, 0f));
-            Vector2 size = flip * new Vector2(1.5f, 0.68f);
-            Vector2 startPos = me + start - (size / 2);
-            Gizmos.DrawLine(startPos, startPos + new Vector2(0,size.y));
-            Gizmos.DrawLine(startPos, startPos + new Vector2(size.x, 0));
-            Gizmos.DrawLine(startPos + new Vector2(size.x, 0), startPos + size);
-            Gizmos.DrawLine(startPos + new Vector2(0, size.y), startPos + size);
         }
         #endregion
         #region Jumping
@@ -303,7 +294,6 @@ namespace PlayerController
         {
             if (_frameInput.RollDown && !isRoll && _grounded)
             {
-                Debug.Log("Roll");
                 _anim.SetTrigger("rollTrig");
                 _frameVelocity.x = rollSpeed * (sr.flipX ? -1 : 1);
                 isRoll = true;
@@ -311,6 +301,10 @@ namespace PlayerController
             }
         }
         public void RollHide()
+        {
+            isRoll = false;
+        }
+        public void SkillHide()
         {
             isRoll = false;
         }
@@ -349,22 +343,29 @@ namespace PlayerController
         {
             _frameVelocity.x = 0;
             isHit = true;
+            isRoll = false;
+            _anim.ResetTrigger("rollTrig");
+            _anim.ResetTrigger("attackTrig");
         }
         public void HitStopFalse()
         {
             isAttack = false;
             isHit = false;
+            GameMgr.Inst.gameScene.hudUI.playerPowerDlg.SetHp(15);
         }
         public bool isHit = false;
         private bool isAlive = true;
         public void OnDeath()
         {
             _frameVelocity.x = 0;
+            _rb.velocity = Vector2.zero;
             isAlive = false;
+            _anim.SetBool("ismove", false);
         }
         public void SetResultState()
         {
             _rb.velocity = Vector2.zero;
+            _anim.SetBool("ismove", false);
         }
     }
 

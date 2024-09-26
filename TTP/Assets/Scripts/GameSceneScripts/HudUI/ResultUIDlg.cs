@@ -86,7 +86,10 @@ public class ResultUIDlg : MonoBehaviour
 
     void OnClicked_BtnReturn() { }
     void OnClicked_BtnRetry() { }
-    void OnClicked_BtnNextStage() { }
+    void OnClicked_BtnNextStage() 
+    {
+        SceneMgr.Instance.LoadScene("GameScene_BossStage");
+    }
 
 
 

@@ -22,13 +22,14 @@ public class CameraMovement : MonoBehaviour
 
     void LateUpdate()
     {
-        Vector3 targetPosition = targetx.position*cameraScale + offset;
-        float x = Mathf.SmoothDamp(transform.position.x, targetPosition.x, ref velocityX, smoothTimeX);
-        float y = Mathf.SmoothDamp(transform.position.y, targetPosition.y, ref velocityY, smoothTimeY);
-        float z = Mathf.SmoothDamp(transform.position.z, targetPosition.z, ref velocityZ, smoothTimeZ);
-        y = Mathf.Max(-2.8f, y);
-        transform.position = new Vector3(x, y, z);
-
-
+        if (GameMgr.Inst.gameScene.battleFSM.IsGameState())
+        {
+            Vector3 targetPosition = targetx.position * cameraScale + offset;
+            float x = Mathf.SmoothDamp(transform.position.x, targetPosition.x, ref velocityX, smoothTimeX);
+            float y = Mathf.SmoothDamp(transform.position.y, targetPosition.y, ref velocityY, smoothTimeY);
+            float z = Mathf.SmoothDamp(transform.position.z, targetPosition.z, ref velocityZ, smoothTimeZ);
+            y = Mathf.Max(-2.8f, y);
+            transform.position = new Vector3(x, y, z);
+        }
     }
 }

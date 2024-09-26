@@ -39,6 +39,7 @@ public class Enemy : Unit
     public float attackDist = 3f;
     public float notAnymore = 3f;
     public float notAnymoreScale = 0.8f;
+    public int enemyHealth = 50;
 
     public enum EnemyState
     {
@@ -52,7 +53,7 @@ public class Enemy : Unit
 
     private void Awake()
     {
-        Initialize(50, 2, 3);
+        Initialize(enemyHealth, 2, 3);
     }
     private void FixedUpdate()
     {
