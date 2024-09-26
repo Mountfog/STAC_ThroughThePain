@@ -21,6 +21,7 @@ public class Player : Unit
     }
     public override void OnHit(Vector2 hitPoint, int damage)
     {
+        if (!GameMgr.Inst.gameScene.battleFSM.IsGameState()) return;
         if (!playerMoveMent.isRoll)
         {
             curHealth -= damage;
@@ -71,6 +72,6 @@ public class Player : Unit
     }
     public void SetResultState()
     {
-        GetComponent<CapsuleCollider2D>().enabled = false;
+        //GetComponent<CapsuleCollider2D>().enabled = false;
     }
 }

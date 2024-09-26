@@ -79,6 +79,7 @@ namespace PlayerController
         private void FixedUpdate()
         {
             if (!isAlive) return;
+            if (!GameMgr.Inst.gameScene.battleFSM.IsGameState()) return;
             CheckCollisions();
 
             HandleJump();

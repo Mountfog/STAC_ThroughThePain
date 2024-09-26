@@ -38,7 +38,8 @@ public class HudUI : MonoBehaviour
         seq.AppendCallback(() => { m_stageText.rectTransform.DOAnchorPosY(130f, 1f).SetRelative().SetEase(Ease.OutBack).SetUpdate(true); ; });
         seq.AppendCallback(() => { m_monsterText.rectTransform.DOAnchorPosY(130f, 1f).SetRelative().SetEase(Ease.OutBack).SetUpdate(true); ; });
         seq.AppendInterval(0.5f);
-        seq.AppendCallback(() => { Time.timeScale = 1f; });
+        seq.AppendCallback(() => { Time.timeScale = 1f; GameMgr.Inst.gameScene.battleFSM.SetGameState();  });
+
         return seq;
     }
     private void Awake()
