@@ -80,6 +80,7 @@ public class ResultUIDlg : MonoBehaviour
 
         StartCoroutine(Enum_UIAnimate(playTime, isClear));
         GameMgr.Inst.gameScene.hudUI.HideInGameUI();
+        GameMgr.Inst.gameScene.battleFSM.SetResultState();
     }
 
 

@@ -6,7 +6,7 @@ public class GameUI : MonoBehaviour
 {
     public Player player = null;
     public List<Enemy> enemyList = null;
-
+    public GameObject monsterParent = null;
     public bool EnemyAllKilled => enemyList.Count == 0;
 
     // Start is called before the first frame update
@@ -17,7 +17,10 @@ public class GameUI : MonoBehaviour
     }
     public void LoadStage()
     {
-        
+        foreach(Transform child in monsterParent.transform)
+        {
+            enemyList.Add(child.GetComponent<Enemy>());
+        }
     }
 
     public void SpawnEnemy()
@@ -25,8 +28,16 @@ public class GameUI : MonoBehaviour
 
 
     }
+    public void SetResultState()
+    {
+        player.SetResultState();
+    }
     public void EnemyKilled(Enemy e)
     {
         enemyList.Remove(e);
+        if(enemyList.Count == 0)
+        {
+            GameMgr.Inst.gameScene.hudUI.resultDlg.Init(true,GameMgr.Inst.gameScene.gameTime);
+        }
     }
 }

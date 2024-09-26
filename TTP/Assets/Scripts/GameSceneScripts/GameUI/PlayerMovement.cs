@@ -109,6 +109,7 @@ namespace PlayerController
                     if (monsters[i] == _col) continue;
                     if (!monsters[i].GetComponent<Unit>().isAlive) continue;
                     monsters[i].GetComponent<Unit>().OnHit(hitPoint, 10);
+                    GameMgr.Inst.gameScene.hudUI.playerPowerDlg.SetHp(10);
                 }
                 isAttack = true;
             }
@@ -277,7 +278,7 @@ namespace PlayerController
         private float rollSpeed = 30f;
         private void HandleDirection()
         {
-            if (_frameInput.Move.x == 0 || isRoll)
+            if (_frameInput.Move.x == 0 || isRoll || isHit)
             {
                 var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
                 
@@ -342,10 +343,18 @@ namespace PlayerController
         {
             AudioMgr.Instance.LoadClip_SFX("playerMove", 1f);
         }
+
         public void HitStop()
         {
             _frameVelocity.x = 0;
+            isHit = true;
         }
+        public void HitStopFalse()
+        {
+            isAttack = false;
+            isHit = false;
+        }
+        public bool isHit = false;
         private bool isAlive = true;
         public void OnDeath()
         {

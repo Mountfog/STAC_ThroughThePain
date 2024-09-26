@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using DG.Tweening;
+using UnityEngine.UI;
 
 public class HudUI : MonoBehaviour
 {
@@ -17,7 +19,28 @@ public class HudUI : MonoBehaviour
     public ButtonUI btn_Attack = null;
     public ButtonUI btn_Rolling = null;
     public ButtonUI btn_Skill = null;
+    public Text m_stageText = null;
+    public Text m_monsterText = null;
 
+    public void SetReadyState()
+    {
+        m_monsterText.text = "³²Àº Àû : " + GameMgr.Inst.gameScene.gameUI.enemyList.Count;
+        StageNum().Play();
+    }
+    Sequence StageNum()
+    {
+        Sequence seq = DOTween.Sequence().SetUpdate(true);
+        seq.AppendCallback(() => { Time.timeScale = 0f; });
+        seq.AppendInterval(1.0f);
+        seq.AppendCallback(()=> { m_stageText.rectTransform.DOAnchorPosY(-130f, 1f).SetRelative().SetEase(Ease.OutBack).SetUpdate(true); ; });
+        seq.AppendCallback(() => { m_monsterText.rectTransform.DOAnchorPosY(-130f, 1f).SetRelative().SetEase(Ease.OutBack).SetUpdate(true); ; });
+        seq.AppendInterval(1.0f);
+        seq.AppendCallback(() => { m_stageText.rectTransform.DOAnchorPosY(130f, 1f).SetRelative().SetEase(Ease.OutBack).SetUpdate(true); ; });
+        seq.AppendCallback(() => { m_monsterText.rectTransform.DOAnchorPosY(130f, 1f).SetRelative().SetEase(Ease.OutBack).SetUpdate(true); ; });
+        seq.AppendInterval(0.5f);
+        seq.AppendCallback(() => { Time.timeScale = 1f; });
+        return seq;
+    }
     private void Awake()
     {
         _playerActions = new PlayerInputActions();
@@ -34,7 +57,7 @@ public class HudUI : MonoBehaviour
         btn_Rolling.Init(ButtonType.Rolling, true, 0.7f);
         btn_Skill.Init(ButtonType.Skill, false, 0.0f);
 
-        StartCoroutine(Enum_SkillTest());
+        //StartCoroutine(Enum_SkillTest());
     }
 
     void FixedUpdate()

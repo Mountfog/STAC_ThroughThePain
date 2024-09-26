@@ -33,7 +33,6 @@ public class Player : Unit
             else
             {
                 GetComponentInChildren<Animator>().SetTrigger("hittrig");
-                playerMoveMent.HitStop();
             }
             GameMgr.Inst.damageTextMgr.CreateDamageText(damage, this.transform, hitPoint);
             Camera.main.transform.GetComponent<CameraShake>().ShakeCamera();
@@ -42,6 +41,7 @@ public class Player : Unit
         else
         {
             GameMgr.Inst.damageTextMgr.CreateDodgeText("È¸ÇÇÇÔ",Color.red, this.transform, hitPoint);
+            GameMgr.Inst.gameScene.hudUI.playerPowerDlg.SetHp(10);
             AudioMgr.Instance.LoadClip_SFX("Jump");
         }
     }
@@ -68,5 +68,9 @@ public class Player : Unit
         {
             OnDeath();
         }
+    }
+    public void SetResultState()
+    {
+        GetComponent<CapsuleCollider2D>().enabled = false;
     }
 }
