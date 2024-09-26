@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 public class SceneMgr : MonoBehaviour
 {
@@ -11,7 +13,8 @@ public class SceneMgr : MonoBehaviour
     //[SerializeField] private Image progressBar;
     [SerializeField] CanvasGroup m_CG;
     [SerializeField] private Image loadingPanel;
-    [SerializeField] private Image loadingImage;
+    [SerializeField] private List<Image> loadingImage = new List<Image>();
+
     private float target = 0;
     private void Awake()
     {
@@ -26,7 +29,10 @@ public class SceneMgr : MonoBehaviour
         }
         loaderCanvas.GetComponent<Canvas>().worldCamera = Camera.main;
         loadingPanel.GetComponent<Image>().DOFade(0f, 1f).SetEase(Ease.InQuint).From(1f);
-        loadingImage.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+        foreach(Image i in loadingImage)
+        {
+            i.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+        }
         m_CG.blocksRaycasts = false;
     }
     public async void LoadScene(string sceneName)
@@ -36,7 +42,11 @@ public class SceneMgr : MonoBehaviour
         //progressBar.fillAmount = 0;
 
         loadingPanel.DOFade(1f, 0.5f).From(0f, true).SetUpdate(true);
-        loadingImage.DOFade(1f, 0.5f).From(0f, true).SetUpdate(true);
+        foreach (Image i in loadingImage)
+        {
+            i.DOFade(1f, 0.5f).From(0f, true).SetUpdate(true);
+        }
+
         var scene = SceneManager.LoadSceneAsync(sceneName);
         scene.allowSceneActivation = false;
 
@@ -47,7 +57,10 @@ public class SceneMgr : MonoBehaviour
         }
         while (scene.progress < 0.9f);
         await Task.Delay(1000);
-        loadingImage.DOFade(0f, 1f).From(1f, true).SetUpdate(true);
+        foreach (Image i in loadingImage)
+        {
+            i.DOFade(0f, 1f).From(1f, true).SetUpdate(true);
+        }
         await Task.Delay(1000);
         scene.allowSceneActivation = true;
         loadingPanel.DOFade(0f, 1f).From(1f, true).SetUpdate(true);
