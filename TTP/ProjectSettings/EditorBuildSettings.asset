@@ -12,7 +12,10 @@ EditorBuildSettings:
     path: Assets/Scenes/GameScene.unity
     guid: 789afa79a727af3498f59747d7590479
   - enabled: 1
-    path: Assets/Scenes/GameScene_BossStage.unity
-    guid: ed72943a86cfd214f8c9de172567a1ae
+    path: Assets/Scenes/GameScene_Stage2.unity
+    guid: 5b56fdf7fddf3974ea4ba5d4bf94f239
+  - enabled: 1
+    path: Assets/Scenes/GameScene_Stage3.unity
+    guid: 07ce8386dc9c7ca4eb9cb6c45b8c3e62
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: e61eaf0b753b0e443b7065899e0d93ef, type: 2}

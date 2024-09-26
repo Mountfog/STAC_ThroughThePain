@@ -351,6 +351,7 @@ namespace PlayerController
         {
             isAttack = false;
             isHit = false;
+            isRoll = false;
             GameMgr.Inst.gameScene.hudUI.playerPowerDlg.SetHp(15);
         }
         public bool isHit = false;
@@ -361,6 +362,7 @@ namespace PlayerController
             _rb.velocity = Vector2.zero;
             isAlive = false;
             _anim.SetBool("ismove", false);
+            GetComponent<Rigidbody2D>().simulated = false;
         }
         public void SetResultState()
         {

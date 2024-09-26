@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ResultUIDlg : MonoBehaviour
@@ -40,6 +41,7 @@ public class ResultUIDlg : MonoBehaviour
 
     #endregion
 
+    [SerializeField] string Nextstage;
     private void Awake()
     {
         cam = Camera.main;
@@ -84,11 +86,17 @@ public class ResultUIDlg : MonoBehaviour
     }
 
 
-    void OnClicked_BtnReturn() { }
-    void OnClicked_BtnRetry() { }
+    void OnClicked_BtnReturn() 
+    {
+        SceneMgr.Instance.LoadScene("TitleScene");
+    }
+    void OnClicked_BtnRetry() 
+    {
+        SceneMgr.Instance.LoadScene(SceneManager.GetActiveScene().name);
+    }
     void OnClicked_BtnNextStage() 
     {
-        SceneMgr.Instance.LoadScene("GameScene_BossStage");
+        SceneMgr.Instance.LoadScene(Nextstage);
     }
 
 
@@ -108,7 +116,7 @@ public class ResultUIDlg : MonoBehaviour
 
         if (isClear)
         {
-            for (int i = 0; i < 3; i++)     // 이거 기준 해줘
+            for (int i = 0; i < 3; i++)     // 이거 기준 해줘 <<양심없음
             {
                 StartCoroutine(Enum_StarEffect(1.0f, i));
                 yield return new WaitForSeconds(0.4f);
@@ -210,6 +218,7 @@ public class ResultUIDlg : MonoBehaviour
         }
 
         fx_StarEffect[starIdx].gameObject.SetActive(true);
+        AudioMgr.Instance.LoadClip_SFX("star");
     }
 
     IEnumerator Enum_ButtonShow(float time, Button _button)

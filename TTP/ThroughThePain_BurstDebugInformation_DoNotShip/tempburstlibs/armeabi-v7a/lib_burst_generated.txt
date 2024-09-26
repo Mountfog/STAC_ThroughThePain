@@ -11,7 +11,6 @@ Library: C:\UnityProjects\GitHubProjects\TTP\STAC_ThroughThePain\TTP\Temp\BurstO
 --float-mode=Fast
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\UnityProjects\GitHubProjects\TTP\STAC_ThroughThePain\TTP\Temp\Burst
---debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/2022.3.42f1/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\UnityProjects\GitHubProjects\TTP\STAC_ThroughThePain\TTP\Library\Burst
 --output=C:\UnityProjects\GitHubProjects\TTP\STAC_ThroughThePain\TTP\Temp\BurstOutput\tempburstlibs\armeabi-v7a\lib_burst_generated
@@ -29,7 +28,6 @@ Library: C:\UnityProjects\GitHubProjects\TTP\STAC_ThroughThePain\TTP\Temp\BurstO
 --target-framework=NetFramework
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\UnityProjects\GitHubProjects\TTP\STAC_ThroughThePain\TTP\Temp\Burst
---debug=Full
 --key-folder=C:/Program Files/Unity/Hub/Editor/2022.3.42f1/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\UnityProjects\GitHubProjects\TTP\STAC_ThroughThePain\TTP\Library\Burst
 --output=C:\UnityProjects\GitHubProjects\TTP\STAC_ThroughThePain\TTP\Temp\BurstOutput\tempburstlibs\armeabi-v7a\lib_burst_generated

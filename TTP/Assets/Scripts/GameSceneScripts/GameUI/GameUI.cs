@@ -38,6 +38,7 @@ public class GameUI : MonoBehaviour
         if(enemyList.Count == 0)
         {
             GameMgr.Inst.gameScene.hudUI.resultDlg.Init(true,GameMgr.Inst.gameScene.gameTime);
+            AudioMgr.Instance.LoadClip_SFX("win");
         }
     }
 }

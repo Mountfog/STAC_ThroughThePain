@@ -10985,8 +10985,8 @@ MonoBehaviour:
   enemyAttackValue: 9
   enemyAttackSpeed: 4
   attackDist: 4
-  notAnymore: 3
-  notAnymoreScale: 0.8
+  notAnymore: 0.1
+  notAnymoreScale: 0
   enemyHealth: 30
 --- !u!95 &97093311
 Animator:
@@ -24761,8 +24761,8 @@ MonoBehaviour:
   enemyAttackValue: 9
   enemyAttackSpeed: 4
   attackDist: 4
-  notAnymore: 3
-  notAnymoreScale: 0.8
+  notAnymore: 0.1
+  notAnymoreScale: 0
   enemyHealth: 30
 --- !u!50 &548417127
 Rigidbody2D:
@@ -39330,8 +39330,8 @@ MonoBehaviour:
   enemyAttackValue: 9
   enemyAttackSpeed: 4
   attackDist: 4
-  notAnymore: 3
-  notAnymoreScale: 0.8
+  notAnymore: 0.1
+  notAnymoreScale: 0
   enemyHealth: 30
 --- !u!50 &936295186
 Rigidbody2D:
@@ -49646,6 +49646,7 @@ MonoBehaviour:
   btnNextStage: {fileID: 1844793878}
   cam: {fileID: 0}
   volume: {fileID: 2128458435}
+  Nextstage: GameScene_Stage3
 --- !u!1 &1466457120
 GameObject:
   m_ObjectHideFlags: 0
@@ -66958,7 +66959,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 2
-      m_TileSpriteIndex: 2
+      m_TileSpriteIndex: 11
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -67258,7 +67259,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 3
-      m_TileSpriteIndex: 6
+      m_TileSpriteIndex: 8
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -69473,26 +69474,26 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 1
-    m_Data: {fileID: -1509950164, guid: a6d4b1530ae0a4648ad2c05ca0b64671, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 174
     m_Data: {fileID: 557272017, guid: a6d4b1530ae0a4648ad2c05ca0b64671, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
   - m_RefCount: 29
     m_Data: {fileID: -851721843, guid: a6d4b1530ae0a4648ad2c05ca0b64671, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 2140175032, guid: a6d4b1530ae0a4648ad2c05ca0b64671, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
   - m_RefCount: 18
     m_Data: {fileID: 178774601, guid: a6d4b1530ae0a4648ad2c05ca0b64671, type: 3}
   - m_RefCount: 6
     m_Data: {fileID: 1374668409, guid: a6d4b1530ae0a4648ad2c05ca0b64671, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: -1509950164, guid: a6d4b1530ae0a4648ad2c05ca0b64671, type: 3}
   - m_RefCount: 6
     m_Data: {fileID: -695192187, guid: a6d4b1530ae0a4648ad2c05ca0b64671, type: 3}
   - m_RefCount: 11
@@ -69736,8 +69737,8 @@ MonoBehaviour:
   enemyAttackValue: 9
   enemyAttackSpeed: 4
   attackDist: 4
-  notAnymore: 3
-  notAnymoreScale: 0.8
+  notAnymore: 0.1
+  notAnymoreScale: 0
   enemyHealth: 30
 --- !u!50 &2127805388
 Rigidbody2D:
@@ -79856,7 +79857,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Stage 1
+  m_Text: 'Stage 2
+
+'
 --- !u!4 &3907395918085779484
 Transform:
   m_ObjectHideFlags: 0
